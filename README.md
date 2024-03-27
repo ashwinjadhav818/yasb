@@ -54,10 +54,10 @@ For an example of the default bar configuration, see the image below:
 
 
 ### How do you run it?
-- Install [Python 3.10](https://www.python.org/doc/versions/)
+- Install [Python 3.12](https://www.python.org/doc/versions/)
 - Install required Python Modules:
   - pip install -r [requirements.txt](requirements.txt)
-- Create the directory `C:/Users/{username}/.yasb/` and copy [styles.css](src/styles.css) and [config.yaml](src/config.yaml) into folder.
+- Create the directory `C:/Users/{username}/.config/yasb/` and copy [styles.css](src/styles.css) and [config.yaml](src/config.yaml) into folder.
   - Configure [styles.css](src/styles.css) and [config.yaml](src/config.yaml) to your liking.
 - Start the application:
   - run `python src/main.py` in your terminal (or create a startup shortcut)
@@ -69,11 +69,11 @@ For an example of the default bar configuration, see the image below:
 
 ### How do you configure it?
 All taskbars can be configured in a user-defined YAML config file [config.yaml](src/config.yaml) located in either of the following directories:
-- `C:/Users/{username}/.yasb/config.yaml`
+- `C:/Users/{username}/.config/yasb/config.yaml`
 - `/path/to/yasb/src/config.yaml`
 
 All taskbars can also be styled using a configurable stylesheet [styles.css](src/styles.css):
-- `C:/Users/{username}/.yasb/styles.css`
+- `C:/Users/{username}/.config/yasb/styles.css`
 - `/path/to/yasb/src/styles.css`
 
 NOTE: If either configuration file is not present in the user's `$HOME/.yasb` directory (or if they contain errors), the default config and stylesheet will be loaded instead. You may also be prompted with a popup error dialog showing which lines of code contain linting errors.
@@ -117,4 +117,4 @@ python -m pylama
 
 #### Commit Formatting and Pull Requests
 - Commit messages should ideally follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
-- Pull Requests should be submitted [here](https://github.com/denBot/yasb/pulls)
+- Pull Requests should be submitted [here](https://github.com/ashwinjadhav818/yasb/pulls)
