@@ -303,16 +303,17 @@ bars:
 #         label: "{icon}"
 #         # The label shown when an active layout change is detected. Accepts: string containing format options {icon} and {layout_name}
 #         layout_icons:
-#             bsp: "[\\]"
-#             columns: "[||]"
-#             rows: "[---]"
-#             vertical_stack: "[]="
-#             horizontal_stack: "H/="
-#             ultrawide_vertical_stack: "[|]="
-#             monocle: "[M]"
-#             maximised: "[X]"
-#             floating: "><>"
-#             paused: "|P|"
+#             bsp: "[\\\\]"
+        #     columns: "[||]"
+        #   rows: "[==]"
+        #   grid: "[G]"
+        #   vertical_stack: "[V]="
+        # horizontal_stack: "[H]="
+        # ultrawide_vertical_stack: "||="
+        # monocle: "[M]"
+        # maximised: "[X]"
+        # floating: "><>"
+        # paused: "[P]"
 #         callbacks:
 #             # callback options include:
 #             # "next_layout" - Cycles the next layout for the active workspace
@@ -433,6 +434,7 @@ widgets:
         bsp: "[\\\\]"
         columns: "[||]"
         rows: "[==]"
+        grid: "[G]"
         vertical_stack: "[V]="
         horizontal_stack: "[H]="
         ultrawide_vertical_stack: "||="

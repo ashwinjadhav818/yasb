@@ -19,6 +19,7 @@ layout_cmds = {
     "BSP": "bsp",
     "Columns": "columns",
     "Rows": "rows",
+    "Grid": "grid",
     "VerticalStack": "vertical-stack",
     "HorizontalStack": "horizontal-stack",
     "UltrawideVerticalStack": "ultrawide-vertical-stack"
@@ -28,6 +29,7 @@ layout_snake_case = {
     "BSP": "bsp",
     "Columns": "columns",
     "Rows": "rows",
+    "Grid": "grid",
     "VerticalStack": "vertical_stack",
     "HorizontalStack": "horizontal_stack",
     "UltrawideVerticalStack": "ultrawide_vertical_stack"
@@ -47,7 +49,7 @@ class ActiveLayoutWidget(BaseWidget):
         self._label = label
         self._layout_icons = layout_icons
         self._layouts = deque([
-            'bsp', 'columns', 'rows', 'vertical-stack', 'horizontal-stack', 'ultrawide-vertical-stack'
+            'bsp', 'columns', 'rows', 'grid', 'vertical-stack', 'horizontal-stack', 'ultrawide-vertical-stack'
         ])
         self._hide_if_offline = hide_if_offline
         self._event_service = EventService()
