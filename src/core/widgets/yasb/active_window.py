@@ -13,10 +13,10 @@ IGNORED_CLASSES = ['WorkerW']
 IGNORED_PROCESSES = ['SearchHost.exe']
 IGNORED_YASB_TITLES = [APP_BAR_TITLE]
 IGNORED_YASB_CLASSES = [
-    'Qt620QWindowIcon',
-    'Qt621QWindowIcon',
-    'Qt620QWindowToolSaveBits',
-    'Qt621QWindowToolSaveBits'
+    'Qt662QWindowIcon',
+    'Qt662QWindowIcon',
+    'Qt662QWindowToolSaveBits',
+    'Qt662QWindowToolSaveBits'
 ]
 
 try:
