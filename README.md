@@ -1,11 +1,11 @@
-<p align="center"><img src="https://raw.githubusercontent.com/denBot/yasb/main/img/yasb_icon.png" width="120"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/ashwinjadhav818/yasb/main/img/yasb_icon.png" width="120"></p>
 <h2 align="center">Yasb - Yet Another Status Bar</h2>
 <p align="center">
   A highly configurable cross-platform (Windows) status bar written in Python.
   <br><br>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
-  <a href="https://github.com/denBot/yasb"><img src="https://img.shields.io/github/languages/top/denBot/yasb"></a>
-  <a href="https://github.com/denBot/yasb/issues"><img src="https://img.shields.io/github/issues/denBot/yasb"></a>
+  <a href="https://github.com/ashwinjadhav818/yasb"><img src="https://img.shields.io/github/languages/top/ashwinjadhav818/yasb"></a>
+  <a href="https://github.com/ashwinjadhav818/yasb/issues"><img src="https://img.shields.io/github/issues/ashwinjadhav818/yasb"></a>
 </p>
 
 ### What is it?
@@ -44,7 +44,7 @@ For an example of the default bar configuration, see the image below:
 - [ ] SCSS stylesheet support
 - [ ] Tray options for toggling bars on/off
 - [ ] Improve default CSS stylesheet
-- [x] [Media Player Widget - WIP](https://github.com/denBot/yasb/pull/13)
+- [x] [Media Player Widget - WIP](https://github.com/ashwinjadhav818/yasb/pull/13)
 - [ ] Disk Space Widget
 - [ ] Keyboard State Widget
 - [ ] Bluetooth(?) Widget
@@ -63,7 +63,7 @@ For an example of the default bar configuration, see the image below:
   - run `python src/main.py` in your terminal (or create a startup shortcut)
 
 ### What do I do if I've spotted a bug?
-**This project is still in early development... If you encounter any bugs, please submit an [issue](https://github.com/denBot/yasb/issues) :bug:**
+**This project is still in early development... If you encounter any bugs, please submit an [issue](https://github.com/ashwinjadhav818/yasb/issues) :bug:**
 
 *Note: Please include a log file along with steps to reproduce when submitting a bug report, it helps!*
 
@@ -103,7 +103,7 @@ If you are running an older version of komorebi, yasb will not be able to query 
 Contributions to yasb are more than welcome. This project was started as an experiment and has blossomed into something I use every day. If you find good use out of this software but believe there are areas for improvement (of which there are likely many), please feel free to submit a Pull Request.
 
 #### Development Environment
-All you will need to get started is Python 3.9 or above.
+All you will need to get started is Python 3.12 or above.
 
 #### Linting
 The project is linted using [pylama](https://github.com/klen/pylama):
