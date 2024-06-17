@@ -34,7 +34,7 @@
          # Accepts: a list of screen names
          # Example: [ "\\.\DISPLAY1", "eDP-1", "HDMI-1" ]
          # Wildcard '*' is used to show the bar on all screens
-       # class_name: 'yab-bar'
+       # class_name: 'yasb-bar'
        # ^ The CSS class name used to style the bar and all of its children (widgets).
        # alignment:
        # ^ alignment options are configured here
@@ -47,7 +47,9 @@
          # always_on_top: false
          # ^ Forces all windows of lower window levels underneath the bar (even in full-screen).
          # windows_app_bar: false
-         # ^ Exclusively reserve the desktop workspace area behind the bar, just like the Windows Taskbar.
+         # ^ Exclusively reserve the desktop workspace area behind the bar, just like the Windows Taskbar
+         # hide_taskbar: false
+         # ^ Hides the Windows taskbar
       # dimensions:
       # ^ the dimensions of the bar can be set here
         # width: "100%"
@@ -84,6 +86,7 @@ bars:
     window_flags:
       always_on_top: false
       windows_app_bar: true
+      hide_taskbar: false 
     dimensions:
       width: "100%"
       height: 32
