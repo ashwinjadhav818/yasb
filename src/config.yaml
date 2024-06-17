@@ -95,7 +95,7 @@ bars:
     widgets:
       left: ["komorebi_workspaces", "komorebi_active_layout", "active_window"]
       center: ["clock"]
-      right: ["explorer_button", "wifi", "cpu", "memory", "battery"]
+      right: ["media_player", "explorer_button", "wifi", "cpu", "memory", "battery"]
 
 
 # widgets:
@@ -462,6 +462,25 @@ widgets:
       callbacks:
         on_middle: "do_nothing"
         on_right: "exec cmd.exe /c start ms-settings:network"
+
+  media_player:
+      type: "yasb.media_player.MediaPlayerWidget"
+      options:
+        label: "{media[title]} - {media[artist]}"
+        label_alt: "{media[title]} - {media[artist]}"
+        update_interval: 10001
+        keep_thumbnail_aspect_ratio: false
+        layout: ["thumbnail", "label"]
+        icons:
+          shuffle: "\uf074"
+          play: "\uf04b"
+          pause: "\uf04c"
+          next: "\uf051"
+          prev: "\uf048"
+          close: "\uf00d"
+          repeat_off: "\uf2f9"
+          repeat_track: "\uf2f9 (T)"
+          repeat_list: "\uf2f9 (L)"
 
   traffic:
     type: "yasb.traffic.TrafficWidget"
