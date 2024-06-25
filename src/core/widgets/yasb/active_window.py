@@ -97,7 +97,7 @@ class ActiveWindowWidget(BaseWidget):
 
         monitor_name = win_info['monitor_info'].get('device', None)
 
-        if self._monitor_exclusive and self.screen().name() != monitor_name:
+        if self._monitor_exclusive and self.screen().name() != monitor_name and win_info.get('monitor_hwnd', 'Unknown') != self.monitor_hwnd:
             self._window_title_text.hide()
         else:
             self._update_window_title(hwnd, win_info, event)
