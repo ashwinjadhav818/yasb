@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import QWidget, QHBoxLayout, QFrame
 from PyQt6.QtGui import QMouseEvent
 from PyQt6.QtCore import QTimer, QThread, Qt
 from typing import Union
+from core.utils.win32.utilities import get_monitor_hwnd
 
 
 class BaseWidget(QWidget):
@@ -16,6 +17,9 @@ class BaseWidget(QWidget):
             class_name: str = ""
     ):
         super().__init__()
+
+        self.monitor_hwnd = get_monitor_hwnd(int(self.winId()))
+
         self._widget_frame = QFrame()
         self._widget_frame_layout = QHBoxLayout()
         self.widget_layout = QHBoxLayout()
