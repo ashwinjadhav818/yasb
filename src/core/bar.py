@@ -100,6 +100,9 @@ class Bar(QWidget):
                 scale_screen_height
             )
 
+    def closeEvent(self, event):
+        self.try_remove_app_bar()
+
     def try_remove_app_bar(self) -> None:
         if self.app_bar_manager:
             self.app_bar_manager.remove_appbar()
