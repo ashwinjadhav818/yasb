@@ -1,7 +1,7 @@
 * {
     /* Bar measurement icons: https://github.com/and3rson/graph-bars-font */
     /* Icon set: https://fontawesome.com/v5.15/how-to-use/on-the-desktop/setup/getting-started */
-    font-family: 'Courier New', 'Bars', 'Font Awesome 5 Free';
+    font-family: 'JetBrainsMono NF', 'Courier New', 'Bars', 'Font Awesome 5 Free';
     font-size: 14px;
     color: #f2e5bc;
 }
@@ -142,4 +142,13 @@
   color: #fbf1c7;
   margin: -4px 2px 2px 8px;
   font-family: Hack;
+}
+
+.media-widget .media-btn {
+  padding: 0 5px;
+  font-weight: bold;
+}
+
+.media-btn {
+  background: transparent;
 }

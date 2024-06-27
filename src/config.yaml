@@ -96,9 +96,9 @@ bars:
       bottom: 0
       right: 0
     widgets:
-      left: ["komorebi_workspaces", "komorebi_active_layout", "active_window"]
+      left: ["komorebi_workspaces", "komorebi_active_layout", "active_window", "media_player"]
       center: ["clock"]
-      right: ["explorer_button", "wifi", "cpu", "memory", "battery"]
+      right: [ "explorer_button", "wifi", "cpu", "memory", "battery"]
 
 
 # widgets:
@@ -276,7 +276,7 @@ bars:
 #             titles: []
 #             # A list of titles the widget should ignore. Accepts: list of strings
 #         callbacks:
-#             on_left: "toggle_label"  # toggles between the clock and alternate clock labels
+#             on_left:"media_player", "toggle_label"  # toggles between the clock and alternate clock labels
 #             on_middle: "do_nothing"
 #             on_right: "do_nothing"
 
@@ -330,6 +330,28 @@ bars:
 #             on_left: "next_layout"
 #             on_middle: "toggle_monocle"
 #             on_right: "prev_layout"
+
+# media_player:
+#   type: "yasb.media_player.MediaPlayerWidget"
+#     options:
+#       label: "{media[title]} - {media[artist]}"
+#       label_alt: "{media[title]} - {media[artist]}"
+#       # Give the intervel of time (in milliseconds) in which the media information should update
+#       update_interval: 500
+#       keep_thumbnail_aspect_ratio: false
+#       # Specity the types of controls to be present
+#       layout: ["label", "close", "prev", "play_pause", "next", "shuffle", "repeat"] 
+#       # Specify the icons to be used.
+#       icons:
+#         shuffle: "\uf074"
+#         play: "\uf04b"
+#         pause: "\uf04c"
+#         next: "\uf051"
+#         prev: "\uf048"
+#         close: "\uf00d"
+#         repeat_off: "\uf2f9"
+#         repeat_track: "\uf2f9 (T)"
+#         repeat_list: "\uf2f9 (L)"
 
 # custom-weather-widget-example:
 #     type: "yasb.clock.CustomWidget"
@@ -465,6 +487,25 @@ widgets:
       callbacks:
         on_middle: "do_nothing"
         on_right: "exec cmd.exe /c start ms-settings:network"
+
+  media_player:
+      type: "yasb.media_player.MediaPlayerWidget"
+      options:
+        label: "{media[title]} - {media[artist]}"
+        label_alt: "{media[title]} - {media[artist]}"
+        update_interval: 500
+        keep_thumbnail_aspect_ratio: false
+        layout: ["thumbnail", "label", "play_pause"]
+        icons:
+          shuffle: "\uf074"
+          play: "\uf04b"
+          pause: "\uf04c"
+          next: "\uf051"
+          prev: "\uf048"
+          close: "\uf00d"
+          repeat_off: "\uf2f9"
+          repeat_track: "\uf2f9 (T)"
+          repeat_list: "\uf2f9 (L)"
 
   traffic:
     type: "yasb.traffic.TrafficWidget"
