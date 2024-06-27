@@ -144,6 +144,11 @@
   font-family: Hack;
 }
 
-.media-widget {
-    color: #FFF;
+.media-widget .media-btn {
+  padding: 0 5px;
+  font-weight: bold;
+}
+
+.media-btn {
+  background: transparent;
 }

@@ -44,7 +44,7 @@ For an example of the default bar configuration, see the image below:
 - [ ] SCSS stylesheet support
 - [ ] Tray options for toggling bars on/off
 - [ ] Improve default CSS stylesheet
-- [x] [Media Player Widget - WIP](https://github.com/denBot/yasb/pull/13)
+- [x] Media Player Widget
 - [x] [Power Button Widget - WIP](https://github.com/ashwinjadhav818/tree/widget/power-button)
 - [ ] Disk Space Widget
 - [ ] Keyboard State Widget

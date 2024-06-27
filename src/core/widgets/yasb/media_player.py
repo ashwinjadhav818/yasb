@@ -22,10 +22,8 @@ class MediaWidgetButton(QPushButton):
 
         self.setStyleSheet('')
 
-
 async def call_async_callback(callback, *args):
     await callback(*args)
-
 
 class MediaPlayerWidget(BaseWidget):
     validation_schema = VALIDATION_SCHEMA
@@ -61,7 +59,8 @@ class MediaPlayerWidget(BaseWidget):
         self._next_btn = None
         self._prev_btn = None
         self._close_btn = None
-        self._thumbnail_pixmap = None
+
+        self.bar = None  # Initialize the bar attribute to None
 
         media_component_builders = {
             "label": self._build_label,
@@ -105,44 +104,40 @@ class MediaPlayerWidget(BaseWidget):
     def _update_label(self):
         active_label = self._label_alt if self._show_alt_label else self._label
         active_label_content = self._label_alt_content if self._show_alt_label else self._label_content
-        
         media_info = asyncio.run(media_control.get_media_info())
         playback_info = asyncio.run(media_control.get_playback_info())
-        
-        if media_info is not None:
+
+        try:
             title_artist = f"{media_info['title']} - {media_info['artist']}"
-        else:
-            title_artist = "No media playing"
-        
-        if playback_info is not None:
-            playback_controls = playback_info.get('controls', {})
-            is_play_enabled = playback_controls.get('is_play_enabled', False)
-        else:
-            is_play_enabled = False
-        
+        except KeyError:
+            title_artist = "No media - Unknown"
+
+        playback_controls = playback_info.get('controls', {})
+        is_play_enabled = playback_controls.get('is_play_enabled', False)
+
         if self._playing_media != title_artist and self.bar:
             if self._thumbnail:
                 asyncio.run(self._update_thumbnail(media_info.get('thumbnail')))
             self._playing_media = title_artist
             self.show()
-        
+
         if self._play_pause_btn:
             if is_play_enabled:
                 self._play_pause_btn.setText(self._icons["play"])
             else:
                 self._play_pause_btn.setText(self._icons["pause"])
-        
+
         if self._shuffle_btn:
             self._shuffle = playback_info.get('is_shuffle_active', False)
             self._update_shuffle_btn_label()
-        
+
         if self._repeat_btn:
             repeat_cycle_mode = playback_info.get('auto_repeat_mode', 0)
             repeat_cycle_mode = repeat_cycle_mode if repeat_cycle_mode else 0
             islice(self._repeat_options, repeat_cycle_mode, None)
             self._repeat = media_control.WindowsMediaRepeat(repeat_cycle_mode)
             self._update_repeat_btn_label()
-        
+
         try:
             active_label.setText(active_label_content.format(media=media_info, playback=playback_info))
         except KeyError:
@@ -248,6 +243,11 @@ class MediaPlayerWidget(BaseWidget):
 
     def _handle_btn_press(self, btn_name):
         session = asyncio.run(media_control.get_current_session())
+
+        if session is None:
+            print("No active media session. Cannot perform the action.")
+            return
+
         callbacks = {
             "prev": session.try_skip_previous_async,
             "next": session.try_skip_next_async,
