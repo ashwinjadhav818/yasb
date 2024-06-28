@@ -49,7 +49,7 @@ For an example of the default bar configuration, see the image below:
 - [x] Disk Space Widget
 - [ ] Keyboard State Widget
 - [ ] Bluetooth(?) Widget
-- [ ] Volume Widget
+- [x] Volume Widget
 - [ ] Backlight Widget
 - [ ] Calendar Pop-up for Clock Widget
 

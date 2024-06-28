@@ -10,3 +10,5 @@ PyYAML
 tzlocal
 watchdog
 winsdk
+comtypes
+pycaw

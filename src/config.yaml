@@ -513,6 +513,17 @@ widgets:
         on_middle: "do_nothing"
         on_right: "exec cmd.exe /c start ms-settings:disksandvolumes"
 
+  volume:
+    type: "yasb.volume.VolumeWidget"
+    options:
+      label: "\uf028 {volume[percent]}"
+      label_alt: "\uf028 {volume[percent]}"
+      update_interval: 100
+      callbacks:
+        on_left: "toggle_label"
+        on_middle: "do_nothing"
+        on_right: "exec cmd.exe /c start ms-settings:sound"
+
   media_player:
       type: "yasb.media_player.MediaPlayerWidget"
       options:
