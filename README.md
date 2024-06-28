@@ -46,7 +46,7 @@ For an example of the default bar configuration, see the image below:
 - [ ] Improve default CSS stylesheet
 - [x] Media Player Widget
 - [x] [Power Button Widget - WIP](https://github.com/ashwinjadhav818/tree/widget/power-button)
-- [ ] Disk Space Widget
+- [x] Disk Space Widget
 - [ ] Keyboard State Widget
 - [ ] Bluetooth(?) Widget
 - [ ] Volume Widget

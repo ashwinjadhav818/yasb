@@ -98,7 +98,7 @@ bars:
     widgets:
       left: ["komorebi_workspaces", "komorebi_active_layout", "active_window", "media_player"]
       center: ["clock"]
-      right: [ "explorer_button", "wifi", "cpu", "memory", "battery"]
+      right: [ "explorer_button", "wifi", "cpu", "memory", "disk", "battery"]
 
 
 # widgets:
@@ -279,6 +279,19 @@ bars:
 #             on_left:"media_player", "toggle_label"  # toggles between the clock and alternate clock labels
 #             on_middle: "do_nothing"
 #             on_right: "do_nothing"
+
+# disk:
+#     type: "yasb.disk.DiskWidget"
+#     options:
+#         label: "\udb80\udeca {volume_label}{space[used][percent]:.1f}%"
+          #  
+#         label_alt: "\udb80\udeca {volume_label}{space[used][gb]:.1f}GB / {space[total][gb]:.1f}GB"
+#         volume_label: "C:"
+#         update_interval: 60000
+#         callbacks:
+#           on_left: "toggle_label"
+#           on_middle: "do_nothing"
+#           on_right: "exec cmd.exe /c start ms-settings:disksandvolumes"
 
 # komorebi_workspaces:
 #     type: "komorebi.workspaces.WorkspacesWidget"
@@ -487,6 +500,18 @@ widgets:
       callbacks:
         on_middle: "do_nothing"
         on_right: "exec cmd.exe /c start ms-settings:network"
+ 
+  disk:
+    type: "yasb.disk.DiskWidget"
+    options:
+      label: "\udb80\udeca {volume_label}{space[used][percent]:.1f}%"
+      label_alt: "\udb80\udeca {volume_label}{space[used][gb]:.1f}GB / {space[total][gb]:.1f}GB"
+      volume_label: "C:"
+      update_interval: 60000
+      callbacks:
+        on_left: "toggle_label"
+        on_middle: "do_nothing"
+        on_right: "exec cmd.exe /c start ms-settings:disksandvolumes"
 
   media_player:
       type: "yasb.media_player.MediaPlayerWidget"
