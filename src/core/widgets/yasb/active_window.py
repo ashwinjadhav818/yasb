@@ -10,7 +10,7 @@ from core.utils.win32.utilities import get_hwnd_info
 
 IGNORED_TITLES = ['', ' ']
 IGNORED_CLASSES = ['WorkerW']
-IGNORED_PROCESSES = ['SearchHost.exe']
+IGNORED_PROCESSES = ['SearchHost.exe', 'komorebi.exe']
 IGNORED_YASB_TITLES = [APP_BAR_TITLE]
 IGNORED_YASB_CLASSES = [
     'Qt662QWindowIcon',
@@ -105,14 +105,13 @@ class ActiveWindowWidget(BaseWidget):
     def _update_window_title(self, hwnd: int, win_info: dict, event: WinEvent) -> None:
         try:
             title = win_info['title']
-            process = win_info['process']
+            process = win_info['process']['name']
             class_name = win_info['class_name']
 
             if (title.strip() in self._ignore_window['titles'] or
                     class_name in self._ignore_window['classes'] or
                     process in self._ignore_window['processes']):
-                if not self._label_no_window:
-                    return self._window_title_text.hide()
+                return
             else:
                 if self._max_length and len(win_info['title']) > self._max_length:
                     truncated_title = f"{win_info['title'][:self._max_length]}{self._max_length_ellipsis}"
