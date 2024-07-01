@@ -79,8 +79,8 @@ class ActiveWindowWidget(BaseWidget):
 
         self.foreground_change.connect(self._on_focus_change_event)
         self._event_service.register_event(WinEvent.EventSystemForeground, self.foreground_change)
-        self._event_service.register_event(WinEvent.EventSystemMoveSizeEnd, self.foreground_change)
-        self._event_service.register_event(WinEvent.EventSystemCaptureEnd, self.foreground_change)
+        # self._event_service.register_event(WinEvent.EventSystemMoveSizeEnd, self.foreground_change)
+        # self._event_service.register_event(WinEvent.EventSystemCaptureEnd, self.foreground_change)
 
     def _toggle_title_text(self) -> None:
         self._show_alt = not self._show_alt
