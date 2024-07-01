@@ -28,6 +28,7 @@ except ImportError:
 
 class ActiveWindowWidget(BaseWidget):
     foreground_change = pyqtSignal(int, WinEvent)
+    window_name_change = pyqtSignal(int, WinEvent)
     validation_schema = VALIDATION_SCHEMA
     event_listener = SystemEventListener
 
@@ -82,6 +83,9 @@ class ActiveWindowWidget(BaseWidget):
         # self._event_service.register_event(WinEvent.EventSystemMoveSizeEnd, self.foreground_change)
         # self._event_service.register_event(WinEvent.EventSystemCaptureEnd, self.foreground_change)
 
+        self.window_name_change.connect(self._on_window_name_change_event)
+        self._event_service.register_event(WinEvent.EventObjectNameChange, self.window_name_change)
+
     def _toggle_title_text(self) -> None:
         self._show_alt = not self._show_alt
         self._active_label = self._label_alt if self._show_alt else self._label
@@ -101,6 +105,10 @@ class ActiveWindowWidget(BaseWidget):
             self._window_title_text.hide()
         else:
             self._update_window_title(hwnd, win_info, event)
+
+    def _on_window_name_change_event(self, hwnd: int, event: WinEvent) -> None:
+        if self._win_info and hwnd == self._win_info["hwnd"]:
+            self._on_focus_change_event(hwnd, event)
 
     def _update_window_title(self, hwnd: int, win_info: dict, event: WinEvent) -> None:
         try:
