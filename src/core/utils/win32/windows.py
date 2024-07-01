@@ -101,3 +101,10 @@ class WinEvent(Event):
     EventUIAEventIdEnd = 0x4EFF
     EventUIAPropIdStart = 0x7500
     EventUIAPropIdEnd = 0x75FF
+
+class ShellEvent(Event):
+    Flashing = 0x8006
+
+class FlashListEvent(Event):
+    Publish = 0x0001
+    Remove = 0x0002

@@ -138,6 +138,18 @@
   margin: 2px;
 }
 
+.flashing-windows-widget {
+  margin-left: 5px;
+}
+.flashing-windows-widget .label {
+  padding: -5px 7px 0 7px;
+  color: #242424;
+  background: #ffdd99;
+  margin-bottom: -1px;
+  border-radius: 3px;
+  margin: 2px;
+}
+
 .komorebi-active-layout .label {
   color: #fbf1c7;
   margin: -4px 2px 2px 8px;
