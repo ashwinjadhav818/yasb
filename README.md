@@ -119,3 +119,7 @@ python -m pylama
 #### Commit Formatting and Pull Requests
 - Commit messages should ideally follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
 - Pull Requests should be submitted [here](https://github.com/ashwinjadhav818/yasb/pulls)
+
+## Acknowledgments
+This project is the fork of the original repository - [Yasb](https://github.com/da-rth/yasb)
+I would like to express my sincere gratitude towards the original creator/owner of the project [Daniel A](https://github.com/da-rth) 
