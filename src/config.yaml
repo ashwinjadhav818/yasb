@@ -96,7 +96,7 @@ bars:
       bottom: 0
       right: 0
     widgets:
-      left: ["komorebi_workspaces", "komorebi_active_layout", "active_window", "media_player"]
+      left: ["komorebi_workspaces", "komorebi_active_layout", "flashing_windows", "active_window", "media_player"]
       center: ["clock"]
       right: [ "explorer_button", "wifi", "cpu", "memory", "disk", "battery"]
 
@@ -410,6 +410,18 @@ widgets:
       max_length: 48
       max_length_ellipsis: "..."
       monitor_exclusive: true
+
+  flashing_windows:
+    type: "yasb.flashing_windows.FlashingWindowsWidget"
+    options:
+      label: "{win[title]}"
+      label_alt: "[class_name='{win[class_name]}' exe='{win[process][name]}' hwnd={win[hwnd]}]"
+      max_length: 48
+      max_length_ellipsis: "..."
+      callbacks:
+          on_left: "activate_window"
+          on_middle: "toggle_label"
+          on_right: "remove_window"
 
   battery:
     type: "yasb.battery.BatteryWidget"
