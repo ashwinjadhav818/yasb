@@ -86,18 +86,20 @@ class VolumeWidget(BaseWidget):
             volume_icon = self._volume_icons[0]  # Default to first icon for muted state
         else:
             volume_level = volume.GetMasterVolumeLevelScalar()
-            volume_percent = round(volume_level * 100, 2)
+            volume_percent = int(round(volume_level * 100, 2))
 
             if volume_percent == 0:
                 volume_icon = self._volume_icons[1]  # Icon for 0-25% volume
-            elif volume_percent <= 25.0:
+            elif volume_percent <= 25:
                 volume_icon = self._volume_icons[2]  # Icon for 0-25% volume
-            elif volume_percent <= 50.0:
+            elif volume_percent <= 50:
                 volume_icon = self._volume_icons[3]  # Icon for 26-50% volume
-            elif volume_percent <= 75.0:
+            elif volume_percent <= 75:
                 volume_icon = self._volume_icons[4]  # Icon for 51-75% volume
             else:
                 volume_icon = self._volume_icons[5]  # Icon for 76-100% volume
+            
+            volume_percent = f"{volume_percent}%"
 
         return {
             'percent': volume_percent,
