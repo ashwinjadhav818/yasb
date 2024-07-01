@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from itertools import cycle, islice
 from core.widgets.base import BaseWidget
 from core.validation.widgets.yasb.media_player import VALIDATION_SCHEMA
@@ -6,6 +7,8 @@ from core.utils.win32 import media_control
 from PyQt6.QtWidgets import QLabel, QPushButton
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap, QCursor
+
+logging.getLogger("asyncio").setLevel(logging.WARNING)
 
 class MediaWidgetButton(QPushButton):
     def __init__(self, button_type: str, button_label: str):
