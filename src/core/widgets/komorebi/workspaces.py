@@ -297,14 +297,14 @@ class WorkspaceWidget(BaseWidget):
                 button = self._try_add_workspace_button(workspace_index)
                 buttons_added = True
 
-            self._update_button(button)
-
         if buttons_added:
             self._workspace_buttons.sort(key=lambda btn: btn.workspace_index)
             self._clear_container_layout()
 
             for workspace_btn in self._workspace_buttons:
                 self._workspace_container_layout.addWidget(workspace_btn)
+                self._update_button(workspace_btn)
+
 
     def _get_workspace_label(self, workspace_index):
         workspace = self._komorebic.get_workspace_by_index(self._komorebi_screen, workspace_index)
@@ -329,7 +329,6 @@ class WorkspaceWidget(BaseWidget):
             ws_label = self._get_workspace_label(workspace_index)
             workspace_btn = WorkspaceButton(workspace_index, ws_label, self._preview_workspace)
 
-            self._update_button(workspace_btn)
             self._workspace_buttons.append(workspace_btn)
 
             return workspace_btn
