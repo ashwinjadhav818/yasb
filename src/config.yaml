@@ -558,7 +558,8 @@ widgets:
   traffic:
     type: "yasb.traffic.TrafficWidget"
     options:
-      label: "\ueb01 \ueab4 {download_speed} | \ueab7 {upload_speed}"
+      # can be: download_speed, download_justified, download_category, and same for upload
+      label: "\ueb01 \ueab4 {download_justified} | \ueab7 {upload_justified}"
       label_alt: "\ueb01 \ueab4 {download_category} | \ueab7 {upload_category}"
       update_interval: 1000 # Update interval should be a multiple of 1000
       callbacks:
