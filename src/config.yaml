@@ -559,7 +559,7 @@ widgets:
     type: "yasb.traffic.TrafficWidget"
     options:
       label: "\ueb01 \ueab4 {download_speed} | \ueab7 {upload_speed}"
-      label_alt: "\ueb01 \ueab4 {upload_speed} | \ueab7 {download_speed}"
+      label_alt: "\ueb01 \ueab4 {download_category} | \ueab7 {upload_category}"
       update_interval: 1000 # Update interval should be a multiple of 1000
       callbacks:
         on_right: "exec cmd /c Taskmgr"
