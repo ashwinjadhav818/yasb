@@ -516,9 +516,16 @@ widgets:
   volume:
     type: "yasb.volume.VolumeWidget"
     options:
-      label: "\uf028 {volume[percent]}"
-      label_alt: "\uf028 {volume[percent]}"
+      label: "{volume_icon}  {volume_level}"
+      label_alt: "{volume_icon}  {volume_level}"
       update_interval: 100
+      volume_icons: 
+        - "\ueee8"  # Icon for muted
+        - "\uf026"  # Icon for 0% volume
+        - "\uf027"  # Icon for 1-25% volume
+        - "\uf027"  # Icon for 26-50% volume
+        - "\uf028"  # Icon for 51-75% volume
+        - "\uf028"  # Icon for 76-100% volume
       callbacks:
         on_left: "toggle_label"
         on_middle: "do_nothing"
