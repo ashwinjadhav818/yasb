@@ -1,4 +1,5 @@
 import logging
+import re
 import subprocess
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QFrame
 from PyQt6.QtGui import QMouseEvent
@@ -72,7 +73,7 @@ class BaseWidget(QWidget):
 
     def _run_callback(self, callback_str: Union[str, list]):
         if " " in callback_str:
-            callback_args = callback_str.split(" ")
+            callback_args = list(map(lambda x: x.strip('\"'), re.findall(r'".+?"|[^ ]+', callback_str)))
             callback_type = callback_args[0]
             callback_args = callback_args[1:]
         else:
