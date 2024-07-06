@@ -71,7 +71,10 @@ class ActiveLayoutWidget(BaseWidget):
 
         self.register_callback("next_layout", self._next_layout)
         self.register_callback("prev_layout", self._prev_layout)
-        self.register_callback("flip_layout", self._komorebic.flip_layout)
+        self.register_callback("flip_layout", self._komorebic.flip_layout_horizontal)
+        self.register_callback("flip_layout_horizontal", self._komorebic.flip_layout_horizontal)
+        self.register_callback("flip_layout_vertical", self._komorebic.flip_layout_vertical)
+        self.register_callback("flip_layout_horizontal_and_vertical", self._komorebic.flip_layout_horizontal_and_vertical)
         self.register_callback("first_layout", self._first_layout)
         self.register_callback("toggle_tiling", lambda: self._komorebic.toggle("tiling"))
         self.register_callback("toggle_float", lambda: self._komorebic.toggle("float"))

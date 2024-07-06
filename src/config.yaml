@@ -335,7 +335,10 @@ bars:
 #             # callback options include:
 #             # "next_layout" - Cycles the next layout for the active workspace
 #             # "prev_layout" - Cycles the previous layout for the active workspace
-#             # "flip_layout" - Flips layout of active workspace. Works for BSP tiling mode only
+#             # "flip_layout" - Flips layout of active workspace horizontally.
+#             # "flip_layout_horizontal" - Flips layout of active workspace horizontally.
+#             # "flip_layout_vertical" - Flips layout of active workspace vertically.
+#             # "flip_layout_horizontal_and_vertical" - Flips layout of active workspace horizontally and vertically.
 #             # "first_layout" - Selects the first layout
 #             # "toggle_tiling" - Toggles tiling of all windows for the active workspace
 #             # "toggle_float" - Toggles floating of active window for current workspace

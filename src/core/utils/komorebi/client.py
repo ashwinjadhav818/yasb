@@ -132,16 +132,25 @@ class KomorebiClient:
         except subprocess.SubprocessError:
             logging.exception(f"Failed to change layout of currently active workspace to {layout}")
 
-    def flip_layout(self) -> None:
+    def flip_layout(self, direction: str) -> None:
         try:
             subprocess.Popen(
-                [self._komorebic_path, "flip-layout"],
+                [self._komorebic_path, "flip-layout", direction],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
                 shell=True
             )
         except subprocess.SubprocessError:
             pass
+
+    def flip_layout_horizontal(self) -> None:
+        self.flip_layout("horizontal")
+
+    def flip_layout_vertical(self) -> None:
+        self.flip_layout("vertical")
+
+    def flip_layout_horizontal_and_vertical(self) -> None:
+        self.flip_layout("horizontal-and-vertical")
 
     def toggle(self, toggle_type: str, wait: bool = False) -> None:
         try:
