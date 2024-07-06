@@ -1,6 +1,7 @@
 DEFAULTS = {
     'hide_if_offline': False,
     "label": "{icon}",
+    'layouts': ['bsp', 'columns', 'rows', 'grid', 'vertical_stack', 'horizontal_stack', 'ultrawide_vertical_stack'],
     'layout_icons': {
         "bsp": "[\\\\]",
         "columns": "[||]",
@@ -25,6 +26,7 @@ ALLOWED_CALLBACKS = [
     "next_layout",
     "prev_layout",
     "flip_layout",
+    "first_layout",
     "toggle_tiling",
     "toggle_float",
     "toggle_monocle",
@@ -40,6 +42,14 @@ VALIDATION_SCHEMA = {
     'label': {
         'type': 'string',
         'default': DEFAULTS['label']
+    },
+    'layouts': {
+        'type': 'list',
+        'schema': {
+            'type': 'string',
+            'required': False
+        },
+        'default': DEFAULTS['layouts']
     },
     'layout_icons': {
         'type': 'dict',

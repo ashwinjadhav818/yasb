@@ -317,6 +317,7 @@ bars:
 #         hide_if_offline: false
 #         # Specifies if the active layout label should be shown when komorebi is offline
 #         label: "{icon}"
+#         layouts: ['bsp', 'columns', 'rows', 'grid', 'vertical_stack', 'horizontal_stack', 'ultrawide_vertical_stack']
 #         # The label shown when an active layout change is detected. Accepts: string containing format options {icon} and {layout_name}
 #         layout_icons:
 #             bsp: "[\\\\]"
@@ -335,6 +336,7 @@ bars:
 #             # "next_layout" - Cycles the next layout for the active workspace
 #             # "prev_layout" - Cycles the previous layout for the active workspace
 #             # "flip_layout" - Flips layout of active workspace. Works for BSP tiling mode only
+#             # "first_layout" - Selects the first layout
 #             # "toggle_tiling" - Toggles tiling of all windows for the active workspace
 #             # "toggle_float" - Toggles floating of active window for current workspace
 #             # "toggle_monocle" - Toggles monocle mode for active window for current workspace
@@ -462,12 +464,17 @@ widgets:
       label_zero_index: false
       hide_empty_workspaces: false
       preview_workspace: false
+      callbacks:
+        on_left: "activate"
+        on_middle: "rename_temporary"
+        on_right: "rename_permanent"
 
   komorebi_active_layout:
     type: "komorebi.active_layout.ActiveLayoutWidget"
     options:
       hide_if_offline: false
       label: "{icon}"
+      layouts: ['bsp', 'columns', 'rows', 'grid', 'vertical_stack', 'horizontal_stack', 'ultrawide_vertical_stack']
       layout_icons:
         bsp: "[\\\\]"
         columns: "[||]"

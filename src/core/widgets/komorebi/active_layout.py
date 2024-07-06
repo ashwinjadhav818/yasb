@@ -44,13 +44,12 @@ class ActiveLayoutWidget(BaseWidget):
     validation_schema = VALIDATION_SCHEMA
     event_listener = KomorebiEventListener
 
-    def __init__(self, label: str, layout_icons: dict[str, str], hide_if_offline: bool, callbacks: dict[str, str]):
+    def __init__(self, label: str, layouts: list[str], layout_icons: dict[str, str], hide_if_offline: bool, callbacks: dict[str, str]):
         super().__init__(class_name="komorebi-active-layout")
         self._label = label
         self._layout_icons = layout_icons
-        self._layouts = deque([
-            'bsp', 'columns', 'rows', 'grid', 'vertical-stack', 'horizontal-stack', 'ultrawide-vertical-stack'
-        ])
+        self._layouts_config = layouts
+        self._reset_layouts()
         self._hide_if_offline = hide_if_offline
         self._event_service = EventService()
         self._komorebic = KomorebiClient()
@@ -71,6 +70,7 @@ class ActiveLayoutWidget(BaseWidget):
         self.register_callback("next_layout", self._next_layout)
         self.register_callback("prev_layout", self._prev_layout)
         self.register_callback("flip_layout", self._komorebic.flip_layout)
+        self.register_callback("first_layout", self._first_layout)
         self.register_callback("toggle_tiling", lambda: self._komorebic.toggle("tiling"))
         self.register_callback("toggle_float", lambda: self._komorebic.toggle("float"))
         self.register_callback("toggle_monocle", lambda: self._komorebic.toggle("monocle"))
@@ -78,6 +78,14 @@ class ActiveLayoutWidget(BaseWidget):
         self.register_callback("toggle_pause", lambda: self._komorebic.toggle("pause"))
 
         self._register_signals_and_events()
+
+    def _reset_layouts(self):
+        self._layouts = deque([x.replace('_', '-') for x in self._layouts_config])
+
+    def _first_layout(self):
+        if self._is_shift_layout_allowed():
+            self._reset_layouts()
+            self._komorebic.change_layout(self._layouts[0])
 
     def _next_layout(self):
         if self._is_shift_layout_allowed():
