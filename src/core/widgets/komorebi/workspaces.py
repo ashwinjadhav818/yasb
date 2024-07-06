@@ -284,7 +284,8 @@ class WorkspaceWidget(BaseWidget):
             workspace_btn.hide()
         else:
             workspace_btn.show()
-
+            label = self._format_workspace_label(workspace)
+            workspace_btn.setText(label if label else str(workspace_index + 1))
             if workspace_btn.status != workspace_status:
                 workspace_btn.update_and_redraw(workspace_status)
 
@@ -308,9 +309,11 @@ class WorkspaceWidget(BaseWidget):
 
     def _get_workspace_label(self, workspace_index):
         workspace = self._komorebic.get_workspace_by_index(self._komorebi_screen, workspace_index)
-        monitor_index = self._komorebi_screen['index']
+        return self._format_workspace_label(workspace)
 
-        ws_index = workspace_index if self._label_zero_index else workspace_index + 1
+    def _format_workspace_label(self, workspace) -> str:
+        monitor_index = self._komorebi_screen['index']
+        ws_index = workspace['index'] if self._label_zero_index else workspace['index'] + 1
         ws_monitor_index = monitor_index if self._label_zero_index else monitor_index + 1
         ws_name = workspace['name'] if workspace['name'] else self._label_default_name.format(
             index=ws_index,
