@@ -27,6 +27,11 @@ class KomorebiClient:
             output = subprocess.check_output([self._komorebic_path, "state"], timeout=self._timeout_secs, shell=True)
             return json.loads(output)
 
+    def configuration(self) -> Optional[str]:
+        with suppress(json.JSONDecodeError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            return subprocess.check_output([self._komorebic_path, "configuration"], timeout=self._timeout_secs, shell=True).decode("utf-8")[:-1]
+        return None
+
     def get_screens(self, state: dict) -> list:
         return state['monitors']['elements']
 
@@ -119,6 +124,12 @@ class KomorebiClient:
             subprocess.Popen([self._komorebic_path, "cycle-workspace", "prev"], shell=True)
         except subprocess.SubprocessError:
             logging.exception("Failed to cycle komorebi workspace")
+
+    def workspace_name(self, monitor, workspace, name) -> None:
+        try:
+            subprocess.Popen([self._komorebic_path, "workspace-name", str(monitor), str(workspace), name], shell=True)
+        except subprocess.SubprocessError:
+            logging.exception("Failed to set workspace name")
 
     def toggle_focus_mouse(self) -> None:
         try:
