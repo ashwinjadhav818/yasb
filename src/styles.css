@@ -23,6 +23,16 @@
 .komorebi-workspaces {
   margin-left: 0;
 }
+
+.rename-widget {
+}
+
+.rename-widget .line-edit {
+}
+
+.dialog {
+}
+
 .ws-btn {
     padding: 5px;
     background: rgba(60, 56, 54, 0.4);

@@ -293,7 +293,7 @@ bars:
 #           on_middle: "do_nothing"
 #           on_right: "exec cmd.exe /c start ms-settings:disksandvolumes"
 
-# komorebi_workspaces:
+# komorebi_wcorkspaces:
 #     type: "komorebi.workspaces.WorkspacesWidget"
 #     options:
 #         label_offline: "Komorebi Offline"
@@ -310,6 +310,10 @@ bars:
 #         # Specifies if empty workspaces should be shown in the list of komorebi workspaces. Accepts: boolean
 #         # preview_workspace: False
           # ^ Specifies mouse over behavior on komorebi workspaces. If true, you can see workspace by mouse over and get back by leaving the button area. Accepts: boolean
+#         callbacks:
+#           on_left: "activate" # Activates the clicked workspaces.
+#           on_middle: "rename_temporary" # Renames the clicked workspace temporarily.
+#           on_right: "rename_permanent" # Renames the clicked workspace and updates komorebi's config.
 
 # komorebi_active_layout:
 #     type: "komorebi.active_layout.ActiveLayoutWidget"
