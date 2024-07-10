@@ -5,6 +5,7 @@ from typing import Union
 from win32gui import SetForegroundWindow
 from settings import APP_BAR_TITLE
 from core.utils.win32.windows import FlashListEvent, WinEvent
+from core.utils.win32.utilities import show_window
 from core.event_service import EventService
 from PyQt6.QtCore import pyqtSignal, Qt, QEvent
 from core.widgets.base import BaseWidget
@@ -125,7 +126,7 @@ class FlashingWindowsWidget(BaseWidget):
     def _activate_window(self, source: QLabel) -> None:
         # just setting the foreground window should in theory be enough, but maybe the window was closed
         self._event_service.emit_event(FlashListEvent.Remove, source.property("win_info")["hwnd"])
-        SetForegroundWindow(source.property("win_info")["hwnd"])
+        show_window(source.property("win_info")["hwnd"])
 
     def _remove_window(self, source: QLabel) -> None:
         self._event_service.emit_event(FlashListEvent.Remove, source.property("win_info")["hwnd"])
