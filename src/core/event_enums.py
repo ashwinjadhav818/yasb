@@ -13,9 +13,6 @@ class MetaEvent(EnumMeta):
 class Event(Enum, metaclass=MetaEvent):
     pass
 
-class WorkspaceButtonEvent(Event):
-    HoverEnter = "HoverEnter"
-    HoverLeave = "HoverLeave"
 
 class KomorebiEvent(Event):
     KomorebiConnect = "KomorebiConnect"

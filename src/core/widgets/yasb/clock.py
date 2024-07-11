@@ -70,7 +70,7 @@ class ClockWidget(BaseWidget):
         active_label_content = self._label_alt_content if self._show_alt_label else self._label_content
 
         try:
-            datetime_format_search = re.search('\{(.*)}', active_label_content)
+            datetime_format_search = re.search('\\{(.*)}', active_label_content)
             datetime_format_str = datetime_format_search.group()
             datetime_format = datetime_format_search.group(1)
             datetime_now = pytz.utc.localize(datetime.utcnow()).astimezone(pytz.timezone(self._active_tz))

@@ -4,7 +4,6 @@ DEFAULTS = {
     'label_default_name': '',
     'label_zero_index': False,
     'hide_empty_workspaces': False,
-    'preview_workspace': False
 }
 
 VALIDATION_SCHEMA = {
@@ -27,9 +26,5 @@ VALIDATION_SCHEMA = {
     'hide_empty_workspaces': {
         'type': 'boolean',
         'default': DEFAULTS['hide_empty_workspaces']
-    },
-    'preview_workspace': {
-        'type': 'boolean',
-        'default': DEFAULTS['preview_workspace']
-    },
+    }
 }
