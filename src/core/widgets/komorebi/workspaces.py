@@ -14,6 +14,7 @@ from core.utils.komorebi.config import KomorebiConfig
 from core.validation.widgets.komorebi.workspaces import VALIDATION_SCHEMA
 from ctypes import windll
 import win32con
+from core.utils.win32.utilities import show_window
 
 try:
     from core.utils.komorebi.event_listener import KomorebiEventListener
@@ -59,10 +60,11 @@ class RenameWidget(QWidget):
         button_pos.setY(button_pos.y() - dy)
         self.move(button_pos)
         hwnd = int(self.winId())
-        # the app bar is unfocusable which messes with focusing on the line edit
         exStyle = windll.user32.GetWindowLongPtrW(hwnd, win32con.GWL_EXSTYLE)
         windll.user32.SetWindowLongPtrW(hwnd, win32con.GWL_EXSTYLE, exStyle & ~win32con.WS_EX_NOACTIVATE & ~win32con.WS_EX_TOPMOST)
+        show_window(hwnd)
         self.edit_widget.selectAll()
+        self.edit_widget.setFocus()
 
     def keyPressEvent(self, event: QKeyEvent):
         if event.key() == Qt.Key.Key_Escape:
@@ -74,7 +76,7 @@ class RenameWidget(QWidget):
         if self.permanent:
             config = KomorebiConfig()
             config.workspace_name(self.ws_monitor, self.ws_index, new_name)
-            config.save()
+            config.save(self)
 
         self.close()
 

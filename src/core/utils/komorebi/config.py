@@ -4,6 +4,7 @@ import json
 from core.utils.komorebi.client import KomorebiClient
 from PyQt6.QtWidgets import QMessageBox
 from PyQt6.QtCore import Qt
+import core.utils.alert_dialog
 
 class KomorebiConfig():
     def __init__(self):
@@ -36,6 +37,8 @@ class KomorebiConfig():
             self._save()
         else:
             mb = QMessageBox()
+            mb.setStyleSheet(core.utils.alert_dialog.dialog_stylesheet)
+            mb.setProperty("class", "dialog")
             mb.setWindowTitle("")
             mb.setText("Warning: This will overwrite the komorebi.json "
                        "configuration, removing any custom formatting "
