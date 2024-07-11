@@ -27,29 +27,29 @@
 # ^ a list of your bar configurations
     # yasb-bar:
     # ^ the name of your bar
-       # enabled: true
-       # ^ Specify if the bar configuration should be loaded by yasb
-       # screens: ['*']
-       # ^ A list of screen names which the bar should be displayed on
-         # Accepts: a list of screen names
-         # Example: [ "\\.\DISPLAY1", "eDP-1", "HDMI-1" ]
-         # Wildcard '*' is used to show the bar on all screens
-       # class_name: 'yasb-bar'
-       # ^ The CSS class name used to style the bar and all of its children (widgets).
-       # alignment:
-       # ^ alignment options are configured here
-         # position: 'top' or 'bottom'
-         # ^ The vertical positioning of the bar on the screen
-         # center: false
-         # ^ Specify if the bar should be horizontally centered on the screen.
-       # window_flags:
-       # ^ special window flags can be enabled here
-         # always_on_top: false
-         # ^ Forces all windows of lower window levels underneath the bar (even in full-screen).
-         # windows_app_bar: false
-         # ^ Exclusively reserve the desktop workspace area behind the bar, just like the Windows Taskbar
-         # hide_taskbar: false
-         # ^ Hides the Windows taskbar
+      # enabled: true
+      # ^ Specify if the bar configuration should be loaded by yasb
+      # screens: ['*']
+      # ^ A list of screen names which the bar should be displayed on
+        # Accepts: a list of screen names
+        # Example: [ "\\.\DISPLAY1", "eDP-1", "HDMI-1" ]
+        # Wildcard '*' is used to show the bar on all screens
+      # class_name: 'yasb-bar'
+      # ^ The CSS class name used to style the bar and all of its children (widgets).
+      # alignment:
+      # ^ alignment options are configured here
+        # position: 'top' or 'bottom'
+        # ^ The vertical positioning of the bar on the screen
+        # center: false
+        # ^ Specify if the bar should be horizontally centered on the screen.
+      # window_flags:
+      # ^ special window flags can be enabled here
+        # always_on_top: false
+        # ^ Forces all windows of lower window levels underneath the bar (even in full-screen).
+        # windows_app_bar: false
+        # ^ Exclusively reserve the desktop workspace area behind the bar, just like the Windows Taskbar
+        # hide_taskbar: false
+        # ^ Hides the Windows taskbar
       # dimensions:
       # ^ the dimensions of the bar can be set here
         # width: "100%"
@@ -96,9 +96,9 @@ bars:
       bottom: 0
       right: 0
     widgets:
-      left: ["komorebi_workspaces", "komorebi_active_layout", "active_window", "media_player"]
-      center: ["clock"]
-      right: [ "explorer_button", "wifi", "cpu", "memory", "disk", "battery"]
+      left: ["komorebi_workspaces", "komorebi_active_layout", "media_player"]
+      center: ["active_window"]
+      right: [ "explorer_button", "wifi", "cpu", "memory", "disk", "battery", "clock"]
 
 
 # widgets:
@@ -423,14 +423,17 @@ widgets:
   battery:
     type: "yasb.battery.BatteryWidget"
     options:
-      time_remaining_natural: true
+      label: "{icon}  {percent}%"
+      label_alt: "{icon}  {percent}% | time: {time_remaining}"
+      time_remaining_natural: false
 
   clock:
     type: "yasb.clock.ClockWidget"
     options:
       label: "{%H:%M:%S %Z}"
       label_alt: "{%d-%m-%y %H:%M:%S %Z}"
-      timezones: ["Europe/London", "America/New_York"]
+      #timezones: ["Europe/London", "America/New_York"]
+      timezones: []
       callbacks:
         on_middle: "exec explorer.exe shell:Appsfolder\\Microsoft.WindowsAlarms_8wekyb3d8bbwe!App"
         on_right: "next_timezone"
@@ -438,8 +441,8 @@ widgets:
   cpu:
     type: "yasb.cpu.CpuWidget"
     options:
-      label: "\uf200 {info[histograms][cpu_percent]}"
-      label_alt: "\uf200 CPU: {info[percent][total]}% | freq: {info[freq][current]:.2f} Mhz"
+      label: "\udb80\udf5b {info[histograms][cpu_percent]}"
+      label_alt: "\udb80\udf5b CPU: {info[percent][total]}% | freq: {info[freq][current]:.2f} Mhz"
       update_interval: 500
       histogram_icons:
         - '\u2581' # 0%
@@ -452,12 +455,14 @@ widgets:
         - '\u2587' # 70%
         - '\u2588' # 80%+
       histogram_num_columns: 10
+      callbacks:
+        on_right: "exec cmd /c Taskmgr"
 
   memory:
     type: "yasb.memory.MemoryWidget"
     options:
-      label: "\uf538 {virtual_mem_free}"
-      label_alt: "\uf538 {virtual_mem_percent}%"
+      label: "\uf200  {virtual_mem_free}"
+      label_alt: "\uf200  {virtual_mem_percent}%"
       update_interval: 5000
       callbacks:
         on_right: "exec cmd /c Taskmgr"
@@ -466,7 +471,7 @@ widgets:
     type: "komorebi.workspaces.WorkspaceWidget"
     options:
       label_offline: "Komorebi Offline"
-      label_workspace_btn: "{index}"
+      label_workspace_btn: "{name}"
       label_default_name: "{index}"
       label_zero_index: false
       hide_empty_workspaces: false
@@ -503,7 +508,7 @@ widgets:
     type: "yasb.wifi.WifiWidget"
     options:
       label: "{wifi_icon}"
-      label_alt: "{wifi_icon} {wifi_name}"
+      label_alt: "{wifi_icon}  {wifi_name}"
       update_interval: 5000
       wifi_icons:
         - "\udb82\udd2e" # 0% strength (no wifi)
@@ -512,9 +517,10 @@ widgets:
         - "\udb82\udd25" # 51-75% strength
         - "\udb82\udd28" # 76-100% strength. Alternate theming: \uf1eb
       callbacks:
+        on_left: "exec quick_settings"
         on_middle: "do_nothing"
         on_right: "exec cmd.exe /c start ms-settings:network"
- 
+
   disk:
     type: "yasb.disk.DiskWidget"
     options:
@@ -541,7 +547,7 @@ widgets:
         - "\uf028"  # Icon for 51-75% volume
         - "\uf028"  # Icon for 76-100% volume
       callbacks:
-        on_left: "toggle_label"
+        on_left: "exec quick_settings"
         on_middle: "do_nothing"
         on_right: "exec cmd.exe /c start ms-settings:sound"
 
@@ -613,3 +619,25 @@ widgets:
         # run every hour
         run_interval: 3600000
         return_format: "json"
+
+  notification_button:
+    type: "yasb.custom.CustomWidget"
+    options:
+      label: "\uf0f3"
+      label_alt: "\uf49a"
+      class_name: "notification-widget"
+      callbacks:
+        on_left: "exec notification_center"
+        on_right: "toggle_label"
+
+  search_button:
+    type: "yasb.custom.CustomWidget"
+    options:
+      label: "\uf422"
+      label_alt: "\uf422 Search"
+      class_name: "search-widget"
+      exec_options:
+        run_once: true
+      callbacks:
+        on_left: "exec search"
+        on_right: "toggle_label"

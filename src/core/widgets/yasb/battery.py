@@ -5,7 +5,7 @@ from core.widgets.base import BaseWidget
 from core.validation.widgets.yasb.battery import VALIDATION_SCHEMA
 from PyQt6.QtWidgets import QLabel
 from typing import Union
-import collections
+
 
 class BatteryWidget(BaseWidget):
     validation_schema = VALIDATION_SCHEMA
@@ -119,12 +119,6 @@ class BatteryWidget(BaseWidget):
         active_label.setText(active_label_content)
 
         self._battery_state = psutil.sensors_battery()
-        if self._battery_state is None:
-            self._battery_state = collections.namedtuple('sbattery', ['percent', 'secsleft', 'power_plugged'])
-            self._battery_state.percent = 100
-            self._battery_state.secleft = psutil.POWER_TIME_UNKNOWN
-            self._battery_state.power_plugged = True
-
 
         threshold = self._get_battery_threshold()
         time_remaining = self._get_time_remaining()

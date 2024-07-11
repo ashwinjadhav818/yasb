@@ -6,7 +6,6 @@ from core.log import init_logger
 from core.tray import TrayIcon
 from core.watcher import create_observer
 
-
 def main():
     config, stylesheet = get_config_and_stylesheet()
 
@@ -36,7 +35,6 @@ def main():
         observer.stop()
         observer.join()
     exit(exit_status)
-
 
 if __name__ == "__main__":
     init_logger()

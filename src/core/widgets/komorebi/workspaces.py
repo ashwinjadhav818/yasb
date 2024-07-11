@@ -1,4 +1,5 @@
 import logging
+import time
 from PyQt6.QtWidgets import QPushButton, QWidget, QHBoxLayout, QLabel, QLineEdit, QApplication
 from PyQt6.QtCore import QObject, pyqtSignal, QTimer, pyqtSlot, Qt, QPoint
 from PyQt6.QtGui import QMouseEvent, QKeyEvent
@@ -6,7 +7,7 @@ from typing import Literal
 from contextlib import suppress
 from core.utils.win32.utilities import get_monitor_hwnd
 from core.event_service import EventService
-from core.event_enums import KomorebiEvent, WorkspaceButtonEvent
+from core.event_enums import KomorebiEvent
 from core.widgets.base import BaseWidget
 from core.utils.komorebi.client import KomorebiClient
 from core.utils.komorebi.config import KomorebiConfig
@@ -76,7 +77,6 @@ class WorkspaceButton(QPushButton):
 
     def __init__(self, workspace_index: int, label: str | None = None, preview_workspace: bool = False, callbacks: dict[str, str] = {}):
         super().__init__()
-        self._preview_workspace = preview_workspace
         self.komorebic = KomorebiClient()
         self.workspace_name = ""
         self.workspace_monitor = -1
@@ -105,7 +105,6 @@ class WorkspaceButton(QPushButton):
         self.setText(label if label else str(workspace_index + 1))
         self.clicked.connect(self.activate_workspace)
         self.hide()
-
         self.isPressed = False
 
     def register_callback(self, callback_name, fn):
@@ -119,7 +118,6 @@ class WorkspaceButton(QPushButton):
     def activate_workspace(self):
         try:
             self.komorebic.activate_workspace(self.workspace_index)
-            self.isPressed = True
         except Exception:
             logging.exception(f"Failed to focus workspace at index {self.workspace_index}")
 
@@ -180,8 +178,6 @@ class WorkspaceWidget(BaseWidget):
     k_signal_connect = pyqtSignal(dict)
     k_signal_update = pyqtSignal(dict, dict)
     k_signal_disconnect = pyqtSignal()
-    b_signal_hover_enter = pyqtSignal(int, QObject)
-    b_signal_hover_leave = pyqtSignal(int, QObject, bool)
 
     validation_schema = VALIDATION_SCHEMA
     event_listener = KomorebiEventListener
@@ -196,7 +192,6 @@ class WorkspaceWidget(BaseWidget):
             preview_workspace: bool,
             callbacks: dict[str, str]
     ):
-
         super().__init__(class_name="komorebi-workspaces")
 
         self._event_service = EventService()
@@ -211,7 +206,6 @@ class WorkspaceWidget(BaseWidget):
         self._workspace_buttons: list[WorkspaceButton] = []
         self._hide_empty_workspaces = hide_empty_workspaces
         self.callbacks = callbacks
-         
         self._preview_workspace = preview_workspace
         self._prev_workspace_on_mouse_index = None
         self._workspace_on_mouse_index = None
@@ -265,15 +259,10 @@ class WorkspaceWidget(BaseWidget):
         self.k_signal_connect.connect(self._on_komorebi_connect_event)
         self.k_signal_update.connect(self._on_komorebi_update_event)
         self.k_signal_disconnect.connect(self._on_komorebi_disconnect_event)
-        self.b_signal_hover_enter.connect(self._show_workspace_on_mouse)
-        self.b_signal_hover_leave.connect(self._hide_workspace_on_mouse)
 
         self._event_service.register_event(KomorebiEvent.KomorebiConnect, self.k_signal_connect)
         self._event_service.register_event(KomorebiEvent.KomorebiDisconnect, self.k_signal_disconnect)
         self._event_service.register_event(KomorebiEvent.KomorebiUpdate, self.k_signal_update)
-
-        self._event_service.register_event(WorkspaceButtonEvent.HoverEnter, self.b_signal_hover_enter)
-        self._event_service.register_event(WorkspaceButtonEvent.HoverLeave, self.b_signal_hover_leave)
 
     def _reset(self):
         self._komorebi_state = None
@@ -281,8 +270,6 @@ class WorkspaceWidget(BaseWidget):
         self._komorebi_workspaces = []
         self._curr_workspace_index = None
         self._prev_workspace_index = None
-        self._prev_workspace_on_mouse_index = None
-        self._workspace_on_mouse_index = None
         self._workspace_buttons = []
         self._clear_container_layout()
 
@@ -387,14 +374,13 @@ class WorkspaceWidget(BaseWidget):
                 button = self._try_add_workspace_button(workspace_index)
                 buttons_added = True
 
-            self._update_button(button)
-
         if buttons_added:
             self._workspace_buttons.sort(key=lambda btn: btn.workspace_index)
             self._clear_container_layout()
 
             for workspace_btn in self._workspace_buttons:
                 self._workspace_container_layout.addWidget(workspace_btn)
+                self._update_button(workspace_btn)
 
     def _get_workspace_label(self, workspace_index):
         workspace = self._komorebic.get_workspace_by_index(self._komorebi_screen, workspace_index)
@@ -421,7 +407,7 @@ class WorkspaceWidget(BaseWidget):
             ws_label = self._get_workspace_label(workspace_index)
             workspace_btn = WorkspaceButton(workspace_index, ws_label, self._preview_workspace, self.callbacks)
 
-            self._update_button(workspace_btn)
+            #self._update_button(workspace_btn)
             self._workspace_buttons.append(workspace_btn)
 
             return workspace_btn
@@ -438,23 +424,3 @@ class WorkspaceWidget(BaseWidget):
     def _hide_offline_status(self):
         self._offline_text.hide()
         self._workspace_container.show()
-
-    @pyqtSlot(int, QObject)
-    def _show_workspace_on_mouse(self, ws_idx: int, parent) -> None:
-        if id(self) != id(parent):
-            return
-
-        self._workspace_on_mouse_index = ws_idx
-        self._prev_workspace_on_mouse_index = self._curr_workspace_index
-        self._komorebic.preview_workspace(self._workspace_on_mouse_index, self._komorebi_state)
-
-
-    @pyqtSlot(int, QObject, bool)
-    def _hide_workspace_on_mouse(self, ws_idx: int, parent, is_pressed: bool) -> None:
-        if id(self) != id(parent):
-            return
-
-        if self._workspace_on_mouse_index is not None:
-            self._komorebic.hide_preview(self._prev_workspace_on_mouse_index, is_pressed)
-            self._prev_workspace_on_mouse_index = None
-            self._workspace_on_mouse_index = None
