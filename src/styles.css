@@ -1,154 +1,166 @@
 * {
-    /* Bar measurement icons: https://github.com/and3rson/graph-bars-font */
-    /* Icon set: https://fontawesome.com/v5.15/how-to-use/on-the-desktop/setup/getting-started */
     font-family: 'JetBrainsMono NF', 'Courier New', 'Bars', 'Font Awesome 5 Free';
-    font-size: 14px;
-    color: #f2e5bc;
-}
-
-.bar {
-    background: rgba(29, 32, 33, 0.3);
-    border: 1px solid #504945;
-    padding: 0 5px;
-}
-
-.container-right .widget {
-  margin: 2px;
-  border-radius: 5px;
-}
-
-.container-right .widget * {
-  color: #242424;
-}
-.komorebi-workspaces {
-  margin-left: 0;
-}
-.ws-btn {
-    padding: 5px;
-    background: rgba(60, 56, 54, 0.4);
-    border: 1px solid rgba(168, 153, 132, 0.4);
-    margin: 2px 1px;
     font-size: 12px;
+    color: #ffffff;   
+}
+.bar {
+    background-color: rgba(255, 255, 255, 0.062);
+    padding: 0 8px; 
+}
+.container-left,
+.container-center,
+.container-right {
+    margin: 0;
+    padding: 0;
+}
+ 
+.widget {
+    padding: 0 2px 3px 2px; 
+}
+.widget .label {
+    padding: 0 2px
+}
+ 
+.ws-btn {
+    background: rgb(168, 167, 167);
+    color: rgb(0, 0 , 0);
+    margin: 4px 3px;
+    padding: 0 3px;
     border-radius: 3px;
 }
 
 .ws-btn:hover {
-    color: #fbf1c7;
-    font-weight: bold;
-}
-
-.ws-btn.populated {
-    border-color: rgba(168, 153, 132, 1.0);
-    color: #ebdbb2;
+    background: rgb(194, 192, 214);
 }
 
 .ws-btn.active {
-    background: rgba(251, 241, 199, 0.85);
-    color: #121212;
+    background: rgb(224, 222, 244);
+    color: rgb(0, 0, 0);
+    font-weight: bold;
 }
 
-.custom-widget {
-    padding: 2px 6px;
-    font-size: 14px;
-    background: #bdae93;
-}
-.custom-widget .icon {
-  font-size: 13px;
-}
-.custom-widget:hover {
-  background: #fbf1c7;
-}
-.custom-widget .icon.icon-left {
-    margin-right: 5px;
-}
-.custom-widget .icon.icon-right {
-    margin-left: 5px;
-}
-.custom-widget.hostname-widget {
-    background: #83a598;
+.clock-widget .label {
+    padding: 0px 4px;
+    background: none;
+    font-size: 13px;
 }
 
-.custom-widget.terminal-widget {
-    font-size: 14px;
-}
-
-.cpu-widget .label,
-.wifi-widget .label,
-.memory-widget .label,
-.traffic-widget .label,
-.battery-widget .label {
-  padding: 2px 5px;
-  font-size: 14px;
-  border-radius: 5px;
-}
-
-.traffic-widget .label {
-    background: #B3D3D9;
-}
-
-.wifi-widget .label {
-  background: #b8bb26;
-}
-
-.cpu-widget .label {
-  background: #d3869b;
-}
-
-.battery-widget .label.status-critical {
-  background: #fb4934;
-}
-.battery-widget .label.status-low {
-  background: #fe8019;
-}
-.battery-widget .label.status-medium {
-  background: #fabd2f;
-}
-.battery-widget .label.status-high {
-  background: #b8bb26;
-}
-.battery-widget .label.status-full {
-  background: #8ec07c;
-}
-.battery-widget .label.status-charging {
-  background: #8ec07c;
-}
-.battery-widget,
-.memory-widget {
-  margin: 0;
-}
-
-.memory-widget .label.status-low {
-  background: #689d6a;
-}
-.memory-widget .label.status-medium {
-  background: #fe8019;
-}
-.memory-widget .label.status-high {
-  background: #cc241d;
-}
-.active-window-widget {
-  margin-left: 5px;
-}
 .active-window-widget .label {
-  padding: -5px 7px 0 7px;
-  color: #242424;
-  background: #83a598;
-  margin-bottom: -1px;
-  border-radius: 3px;
-  margin: 2px;
+    color: #ffffff;
+    text-transform: capitalize;
+    font-size: 13px;
+}
+.komorebi-workspaces {
+    padding: 0 2px
+}
+.komorebi-workspaces .ws-btn {
+    border-radius: 5px;
+    padding: 0 2px;
+    color:  rgba(218, 231, 255, 0.3);
+    background-color: rgba(0, 0, 0, 0);
+}
+.komorebi-workspaces .ws-btn:hover {
+    color:  rgba(218, 231, 255, 0.5);
+}
+.komorebi-workspaces .ws-btn.populated {
+    color:  rgba(218, 231, 255, 0.7);
+}
+.komorebi-workspaces .ws-btn.active {
+    border: 2px solid rgba(218, 231, 255, 0.8);
+    color: rgb(218, 231, 255);
+    width: 28px;
 }
 
-.komorebi-active-layout .label {
-  color: #fbf1c7;
-  margin: -4px 2px 2px 8px;
-  font-family: Hack;
+.komorebi-active-layout .label{
+    color: rgb(201, 204, 230);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 600;
+}
+
+.system-widget {
+    padding-left:0;
+    padding-right: 0;
+}
+
+/* .system-widget.volume .label{
+    color: #89b4fa;
+} */
+.system-widget.power .label {
+    color: #f38ba8;
+}
+
+ 
+.system-widget .label{
+    padding-left:6px;
+    padding-right: 6px;
+}
+
+.system-widget .label:hover  {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* .system-widget .label.app1 {color:#89b4fa;} 
+.system-widget .label.app2 {color:#89faa1;}*/
+
+
+/*Power Buttons*/
+.system-widget .label.power-button {
+    color: #ff94b2;
+} 
+.power-button-widget {
+    background-color: rgb(24, 24, 37);
+    border-radius:12px;
+    border:4px solid rgb(49, 50, 68);
+}
+ 
+.shutdown-buttons {
+    padding:0px;
+    width: 240px;
+    height: 120px;
+    border-radius: 8px;
+    background-color: rgb(49, 50, 68);
+    font-family: "SegoeUI";
+    color: white;
+    border: 1px solid rgba(255,255,255,0.1);
+    margin: 8px;
+}
+ 
+.shutdown-buttons.hover {
+    background-color: rgb(55, 56, 75);
+    border: 1px solid rgb(55, 56, 75);
+
+}
+.shutdown-label {
+    margin-bottom: 8px;
+    font-size: 18px;
+    font-weight:600;
+    color: rgba(255, 255, 255, 0.95);  
+}
+.shutdown-icons {
+    font-size: 48px;
+    padding-top:8px;
+    color: rgba(255, 255, 255, 0.25);  
+}
+.shutdown-buttons.cancel .shutdown-icons {
+    color:rgba(243, 139, 168, 0.55);
+}
+.shutdown-buttons.cancel .shutdown-label {
+    color:rgba(243, 139, 168, 0.95);
+}
+
+
+.shutdown-buttons.shutdown .shutdown-icons {
+    color:rgba(137, 180, 250, 0.55);
+}
+.shutdown-buttons.shutdown .shutdown-label {
+    color:rgba(137, 180, 250, 0.95);
 }
 
 .media-widget .media-btn {
-  padding: 0 5px;
-  font-weight: bold;
+    padding: 0 5px;
+    font-weight: bold;
 }
 
 .media-btn {
-  background: transparent;
+    background: transparent;
 }
