@@ -3,17 +3,10 @@ from PyQt6.QtWidgets import QWidget, QFrame
 from PyQt6.QtCore import pyqtSignal, Qt
 from core.event_service import EventService
 from core.utils.win32.windows import WinEvent
-from core.bar import BAR_WM_TITLE
 from core.utils.win32.utilities import get_hwnd_info, get_window_extended_frame_bounds, is_window_maximised
 
-IGNORED_CLASSES = [
-    'WorkerW',
-    'Progman',
-    'Qt620QWindowIcon',
-    'Qt620QWindowToolSaveBits',
-    'XamlExplorerHostIslandWindow'
-]
-IGNORED_TITLES = ['', BAR_WM_TITLE]
+IGNORED_CLASSES = ['']
+IGNORED_TITLES = ['']
 IGNORED_PROCS = ['SearchHost.exe']
 
 BORDER_WIDTH = 10
@@ -58,7 +51,6 @@ class ActiveWindowBorder(QWidget):
         self._event_service.register_event(WinEvent.EventSystemMoveSizeStart, self.hide_active_border)
         self._event_service.register_event(WinEvent.EventSystemMoveSizeEnd, self.update_active_border)
         self._event_service.register_event(WinEvent.EventObjectReorder, self.update_active_border)
-
         self.show()
 
     def _ignored_hwnd(self) -> bool:

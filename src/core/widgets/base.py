@@ -1,10 +1,11 @@
 import logging
 import subprocess
+import re
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QFrame
 from PyQt6.QtGui import QMouseEvent
 from PyQt6.QtCore import QTimer, QThread, Qt
 from typing import Union
-
+from core.utils.win32.system_function import function_map
 
 class BaseWidget(QWidget):
     validation_schema: dict = None
@@ -20,7 +21,7 @@ class BaseWidget(QWidget):
         self._widget_frame_layout = QHBoxLayout()
         self.widget_layout = QHBoxLayout()
         self.timer_interval = timer_interval
-        self.bar = None
+        self.bar_id = None
 
         if class_name:
             self._widget_frame.setProperty("class", f"widget {class_name}")
@@ -70,7 +71,7 @@ class BaseWidget(QWidget):
 
     def _run_callback(self, callback_str: Union[str, list]):
         if " " in callback_str:
-            callback_args = callback_str.split(" ")
+            callback_args = list(map(lambda x: x.strip('\"'), re.findall(r'".+?"|[^ ]+', callback_str)))
             callback_type = callback_args[0]
             callback_args = callback_args[1:]
         else:
@@ -89,7 +90,10 @@ class BaseWidget(QWidget):
         self._run_callback(self.callback_timer)
 
     def _cb_execute_subprocess(self, cmd: str, *cmd_args: list[str]):
-        subprocess.Popen([cmd, *cmd_args] if cmd_args else [cmd], shell=True)
+        if cmd in function_map:
+            function_map[cmd]()
+        else:
+            subprocess.Popen([cmd, *cmd_args] if cmd_args else [cmd], shell=True)
 
     def _cb_do_nothing(self):
         pass

@@ -61,10 +61,10 @@ class ActiveLayoutWidget(BaseWidget):
 
         self._active_layout_text = QLabel()
         self._active_layout_text.setProperty("class", "label")
-        self._active_layout_text.hide()
-
+        
+        
         self.widget_layout.addWidget(self._active_layout_text)
-
+  
         self.callback_left = callbacks['on_left']
         self.callback_right = callbacks['on_right']
         self.callback_middle = callbacks['on_middle']
@@ -83,6 +83,7 @@ class ActiveLayoutWidget(BaseWidget):
         self.register_callback("toggle_pause", lambda: self._komorebic.toggle("pause"))
 
         self._register_signals_and_events()
+        self.hide()
 
     def _reset_layouts(self):
         self._layouts = deque([x.replace('_', '-') for x in self._layouts_config])
@@ -131,13 +132,15 @@ class ActiveLayoutWidget(BaseWidget):
 
     def _on_komorebi_connect_event(self, state: dict) -> None:
         self._update_active_layout(state, is_connect_event=True)
-
+        if self.isHidden():
+            self.show()
+ 
     def _on_komorebi_layout_change_event(self, _event: dict, state: dict) -> None:
         self._update_active_layout(state)
 
     def _on_komorebi_disconnect_event(self) -> None:
         if self._hide_if_offline:
-            self._active_layout_text.hide()
+            self.hide()
 
     def _update_active_layout(self, state: dict, is_connect_event=False):
         try:
@@ -161,7 +164,7 @@ class ActiveLayoutWidget(BaseWidget):
                 )
 
                 if self._active_layout_text.isHidden():
-                    self._active_layout_text.show()
+                    self.show()
         except Exception:
             logging.exception("Failed to update komorebi status and widget button state")
 
