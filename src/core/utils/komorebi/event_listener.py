@@ -4,6 +4,7 @@ import json
 import uuid
 import win32pipe
 import win32file
+import pywintypes
 from PyQt6.QtCore import QThread
 from core.event_enums import KomorebiEvent
 from core.event_service import EventService
@@ -11,7 +12,6 @@ from core.utils.komorebi.client import KomorebiClient
 
 KOMOREBI_PIPE_BUFF_SIZE = 64 * 1024
 KOMOREBI_PIPE_NAME = "yasb"
-
 
 class KomorebiEventListener(QThread):
 
@@ -52,36 +52,46 @@ class KomorebiEventListener(QThread):
         logging.info(f"Created named pipe {self.pipe_name}")
 
     def run(self):
-        self._create_pipe()
-        self._wait_until_komorebi_online()
+        while self._app_running:
+            try:
+                self._create_pipe()
+                self._wait_until_komorebi_online()
 
-        try:
-            while self._app_running:
-                buffer, bytes_to_read, result = win32pipe.PeekNamedPipe(self.pipe, 1)
+                while self._app_running:
+                    try:
+                        buffer, bytes_to_read, result = win32pipe.PeekNamedPipe(self.pipe, 1)
+                        if not bytes_to_read:
+                            time.sleep(0.05)
+                            continue
 
-                if not bytes_to_read:
-                    time.sleep(0.05)
-                    continue
+                        result, data = win32file.ReadFile(self.pipe, bytes_to_read, None)
 
-                result, data = win32file.ReadFile(self.pipe, bytes_to_read, None)
+                        if not data.strip():
+                            continue
 
-                if not data.strip():
-                    continue
+                        try:
+                            event_message = json.loads(data.decode("utf-8"))
+                            event = event_message['event']
+                            state = event_message['state']
 
-                try:
-                    event_message = json.loads(data.decode("utf-8"))
-                    event = event_message['event']
-                    state = event_message['state']
-
-                    if event and state:
-                        self._emit_event(event, state)
-                except (KeyError, ValueError):
-                    logging.exception(f"Failed parse komorebi state. Received data: {data}")
-        except (BaseException, Exception):
-            logging.exception(f"Komorebi has disconnected from the named pipe {self.pipe_name}")
-            win32file.CloseHandle(self.pipe)
-            self.event_service.emit_event(KomorebiEvent.KomorebiDisconnect)
-            self.start()
+                            if event and state:
+                                self._emit_event(event, state)
+                        except (KeyError, ValueError):
+                            logging.exception(f"Failed to parse komorebi state. Received data: {data}")
+                    except pywintypes.error as e:
+                        if e.winerror == 109:  # ERROR_BROKEN_PIPE
+                            logging.warning(f"Pipe has been ended: {e}")
+                            break
+                        else:
+                            logging.exception(f"Unexpected error occurred: {e}")
+            except (BaseException, Exception):
+                logging.exception(f"Komorebi has disconnected from the named pipe {self.pipe_name}")
+            finally:
+                if self.pipe:
+                    win32file.CloseHandle(self.pipe)
+                self.event_service.emit_event(KomorebiEvent.KomorebiDisconnect)
+                logging.info("Attempting to reconnect...")
+                time.sleep(5)
 
     def stop(self):
         self._app_running = False
@@ -95,12 +105,13 @@ class KomorebiEventListener(QThread):
     def _wait_until_komorebi_online(self):
         logging.info(f"Waiting for Komorebi to subscribe to named pipe {self.pipe_name}")
         stderr, proc = self._komorebic.wait_until_subscribed_to_pipe(self.pipe_name)
-
+       
         if stderr:
-            logging.warning(f"Komorebi failed to subscribe named pipe. Waiting for subscription: {stderr.decode('utf-8')}")
+            #logging.warning(f"Komorebi failed to subscribe named pipe. Waiting for subscription: {stderr.decode('utf-8')}")
+             logging.warning(f"Komorebi failed to subscribe named pipe. Waiting for subscription...")   
 
-        while self._app_running and proc.returncode != 0:
-            time.sleep(1)
+        while self._app_running and proc.returncode != 0: 
+            time.sleep(10)
             stderr, proc = self._komorebic.wait_until_subscribed_to_pipe(self.pipe_name)
 
         win32pipe.ConnectNamedPipe(self.pipe, None)

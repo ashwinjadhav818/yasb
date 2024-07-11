@@ -7,6 +7,7 @@ from core.utils.utilities import is_valid_percentage_str, percent_to_float
 from core.validation.bar import BAR_DEFAULTS
 from BlurWindow.blurWindow import GlobalBlur
 from ctypes import windll
+ 
 try:
     from core.utils.win32 import app_bar
     IMPORT_APP_BAR_MANAGER_SUCCESSFUL = True
@@ -55,22 +56,24 @@ class Bar(QWidget):
         self.setWindowFlag(Qt.WindowType.Tool)
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
-        
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose) 
         
         if self._window_flags['always_on_top']:
             self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)
-            
+
         taskbar = windll.user32.FindWindowA(b'Shell_TrayWnd', None)
         if self._window_flags['hide_taskbar']:
             windll.user32.ShowWindow(taskbar, 0) # hide the taskbar
         else:    
             windll.user32.ShowWindow(taskbar, 9) # show the taskbar
+
         self._bar_frame = QFrame(self)
         self._bar_frame.setProperty("class", f"bar {class_name}")
         self._add_widgets(widgets)
         self.position_bar(init)
 
+        
+        
         if blur_effect['enabled']:
             GlobalBlur(
                 self.winId(),
@@ -80,6 +83,7 @@ class Bar(QWidget):
             )
 
         self.screen().geometryChanged.connect(self.on_geometry_changed, Qt.ConnectionType.QueuedConnection)
+
         self.show()
 
     @property
@@ -99,7 +103,7 @@ class Bar(QWidget):
                 self.screen(),
                 scale_screen_height
             )
-
+            
     def closeEvent(self, event):
         self.try_remove_app_bar()
 
@@ -117,7 +121,7 @@ class Bar(QWidget):
 
     def position_bar(self, init=False) -> None:
         bar_width = self._dimensions['width']
-        bar_height = self._dimensions['height'] + self._padding['top']
+        bar_height = self._dimensions['height']
 
         screen_scale = self.screen().devicePixelRatio()
         screen_width = self.screen().geometry().width()
@@ -136,16 +140,16 @@ class Bar(QWidget):
             screen_height = screen_height / screen_scale
 
         if is_valid_percentage_str(str(self._dimensions['width'])):
-            bar_width = int(screen_width * percent_to_float(self._dimensions['width']))
-
+            bar_width = int(screen_width * percent_to_float(self._dimensions['width']) - self._padding['left'] - self._padding['right'])
         bar_x, bar_y = self.bar_pos(bar_width, bar_height, screen_width, screen_height)
-        
+        bar_x = bar_x + self._padding['left'] 
+        bar_y = bar_y + self._padding['top']
         self.setGeometry(bar_x, bar_y, bar_width, bar_height)
         self._bar_frame.setGeometry(
-            self._padding['left'],
-            self._padding['top'],
-            bar_width - self._padding['left'] - self._padding['right'],
-            bar_height - self._padding['top'] # Fix top position
+            0,
+            0,
+            bar_width,
+            bar_height
         )
 
         self.try_add_app_bar(scale_screen_height=not should_downscale_screen_geometry)
@@ -178,5 +182,5 @@ class Bar(QWidget):
 
             layout_container.setLayout(layout)
             bar_layout.addWidget(layout_container, 0, column_num)
-
+ 
         self._bar_frame.setLayout(bar_layout)
