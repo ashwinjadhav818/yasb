@@ -377,6 +377,7 @@ class WorkspaceWidget(BaseWidget):
             except IndexError:
                 button = self._try_add_workspace_button(workspace_index)
                 buttons_added = True
+            self._update_button(button)
 
         if buttons_added:
             self._workspace_buttons.sort(key=lambda btn: btn.workspace_index)
@@ -384,7 +385,6 @@ class WorkspaceWidget(BaseWidget):
 
             for workspace_btn in self._workspace_buttons:
                 self._workspace_container_layout.addWidget(workspace_btn)
-                self._update_button(workspace_btn)
 
     def _get_workspace_label(self, workspace_index):
         workspace = self._komorebic.get_workspace_by_index(self._komorebi_screen, workspace_index)
