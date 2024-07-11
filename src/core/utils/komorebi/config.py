@@ -32,7 +32,9 @@ class KomorebiConfig():
         self.config[key] = value
 
     def save(self):
-        if "yasb_save_confirmed" not in self.config or self.config["yasb_save_confirmed"] != True:
+        if "yasb_save_confirmed" in self.config and self.config["yasb_save_confirmed"] == True:
+            self._save()
+        else:
             mb = QMessageBox()
             mb.setWindowTitle("")
             mb.setText("Warning: This will overwrite the komorebi.json "
@@ -51,8 +53,12 @@ class KomorebiConfig():
             reply = mb.exec()
             if reply == QMessageBox.StandardButton.Yes:
                 self.config["yasb_save_confirmed"] = True
-                with open(self.config_path, "w") as f:
-                    json.dump(self.config, f, indent=2)
+                self._save()
+
+    def _save(self):
+        if self.config_path is not None:
+            with open(self.config_path, "w") as f:
+                json.dump(self.config, f, indent=2)
 
     def workspace_name(self, ws_monitor, ws_index, ws_name):
         if "monitors" not in self.config:
