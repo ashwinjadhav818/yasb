@@ -293,7 +293,7 @@ bars:
 #           on_middle: "do_nothing"
 #           on_right: "exec cmd.exe /c start ms-settings:disksandvolumes"
 
-# komorebi_workspaces:
+# komorebi_wcorkspaces:
 #     type: "komorebi.workspaces.WorkspacesWidget"
 #     options:
 #         label_offline: "Komorebi Offline"
@@ -310,6 +310,10 @@ bars:
 #         # Specifies if empty workspaces should be shown in the list of komorebi workspaces. Accepts: boolean
 #         # preview_workspace: False
           # ^ Specifies mouse over behavior on komorebi workspaces. If true, you can see workspace by mouse over and get back by leaving the button area. Accepts: boolean
+#         callbacks:
+#           on_left: "activate" # Activates the clicked workspaces.
+#           on_middle: "rename_temporary" # Renames the clicked workspace temporarily.
+#           on_right: "rename_permanent" # Renames the clicked workspace and updates komorebi's config.
 
 # komorebi_active_layout:
 #     type: "komorebi.active_layout.ActiveLayoutWidget"
@@ -317,6 +321,7 @@ bars:
 #         hide_if_offline: false
 #         # Specifies if the active layout label should be shown when komorebi is offline
 #         label: "{icon}"
+#         layouts: ['bsp', 'columns', 'rows', 'grid', 'vertical_stack', 'horizontal_stack', 'ultrawide_vertical_stack']
 #         # The label shown when an active layout change is detected. Accepts: string containing format options {icon} and {layout_name}
 #         layout_icons:
 #             bsp: "[\\\\]"
@@ -334,7 +339,11 @@ bars:
 #             # callback options include:
 #             # "next_layout" - Cycles the next layout for the active workspace
 #             # "prev_layout" - Cycles the previous layout for the active workspace
-#             # "flip_layout" - Flips layout of active workspace. Works for BSP tiling mode only
+#             # "flip_layout" - Flips layout of active workspace horizontally.
+#             # "flip_layout_horizontal" - Flips layout of active workspace horizontally.
+#             # "flip_layout_vertical" - Flips layout of active workspace vertically.
+#             # "flip_layout_horizontal_and_vertical" - Flips layout of active workspace horizontally and vertically.
+#             # "first_layout" - Selects the first layout
 #             # "toggle_tiling" - Toggles tiling of all windows for the active workspace
 #             # "toggle_float" - Toggles floating of active window for current workspace
 #             # "toggle_monocle" - Toggles monocle mode for active window for current workspace
@@ -478,12 +487,18 @@ widgets:
       label_default_name: "{index}"
       label_zero_index: false
       hide_empty_workspaces: false
+      preview_workspace: false
+      callbacks:
+        on_left: "activate"
+        on_middle: "rename_temporary"
+        on_right: "rename_permanent"
 
   komorebi_active_layout:
     type: "komorebi.active_layout.ActiveLayoutWidget"
     options:
       hide_if_offline: false
       label: "{icon}"
+      layouts: ['bsp', 'columns', 'rows', 'grid', 'vertical_stack', 'horizontal_stack', 'ultrawide_vertical_stack']
       layout_icons:
         bsp: "[\\\\]"
         columns: "[||]"

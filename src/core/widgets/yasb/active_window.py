@@ -13,10 +13,10 @@ IGNORED_CLASSES = ['WorkerW','TopLevelWindowForOverflowXamlIsland','Shell_TrayWn
 IGNORED_PROCESSES = ['SearchHost.exe','komorebi.exe']
 IGNORED_YASB_TITLES = [APP_BAR_TITLE]
 IGNORED_YASB_CLASSES = [
-    'Qt620QWindowIcon',
-    'Qt621QWindowIcon',
-    'Qt620QWindowToolSaveBits',
-    'Qt621QWindowToolSaveBits'
+    'Qt662QWindowIcon',
+    'Qt662QWindowIcon',
+    'Qt662QWindowToolSaveBits',
+    'Qt662QWindowToolSaveBits'
 ]
 
 try:
@@ -95,11 +95,8 @@ class ActiveWindowWidget(BaseWidget):
                 not win_info['title'] or
                 win_info['title'] in IGNORED_YASB_TITLES or
                 win_info['class_name'] in IGNORED_YASB_CLASSES):
-            self.hide()    
+            self.hide()
             return
-
-        monitor_xpos = win_info['monitor_info'].get('rect', None).get('x', None)
-        monitor_ypos = win_info['monitor_info'].get('rect', None).get('y', None)
 
         if (self._monitor_exclusive and win_info.get('monitor_hwnd', 'Unknown') != self.monitor_hwnd) or (win_info['title'] in IGNORED_TITLES or win_info['class_name'] in IGNORED_CLASSES):
             self.hide()
@@ -112,7 +109,6 @@ class ActiveWindowWidget(BaseWidget):
             self._on_focus_change_event(hwnd, event)
 
     def _update_window_title(self, hwnd: int, win_info: dict, event: WinEvent) -> None:
-        
         try:
             title = win_info['title']
             process = win_info['process']['name']

@@ -71,6 +71,7 @@
     width: 28px;
 }
 
+<<<<<<< HEAD
 .flashing-windows-widget {
   margin-left: 5px;
 }
@@ -81,6 +82,10 @@
   margin-bottom: -1px;
   border-radius: 3px;
   margin: 2px;
+.rename-widget {
+}
+
+.rename-widget .line-edit {
 }
 
 .komorebi-active-layout .label{
