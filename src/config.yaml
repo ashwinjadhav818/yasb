@@ -553,11 +553,11 @@ widgets:
       update_interval: 1000
       # You can have as many icons as you want, the first is mute, the rest are divided equally
       volume_icons: 
-        - "\udb81\udf5f"  # Icon for muted
-        - "\udb81\udf5f"  # Icon for 0% volume
-        - "\udb81\udd7f"
-        - "\udb81\udd80"
-        - "\udb81\udd7e"
+        - "\ueee8"  # Icon for muted
+        - "\ueee8"  # Icon for 0% volume
+        - "\uf026"
+        - "\uf027"
+        - "\uf028"
       callbacks:
         on_left: "exec quick_settings"
         on_middle: "do_nothing"

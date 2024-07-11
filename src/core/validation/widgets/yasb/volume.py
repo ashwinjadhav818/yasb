@@ -3,17 +3,17 @@ DEFAULTS = {
     'label_alt': "{volume_icon} {volume_level}%",
     'update_interval': 1000,
     'volume_icons': [
-        "\udb81\udf5f",
-        "\udb81\udf5f",
-        "\udb81\udd7f",
-        "\udb81\udd80",
-        "\udb81\udd7e"
+        "\ueee8",
+        "\ueee8",
+        "\uf026",
+        "\uf027",
+        "\uf028"
     ],
     'callbacks': {
         'on_left': 'do_nothing',
         'on_middle': 'do_nothing',
         'on_right': 'do_nothing'
-    },
+    }
 }
 
 VALIDATION_SCHEMA = {
