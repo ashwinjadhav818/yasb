@@ -82,6 +82,9 @@ class WorkspaceButton(QPushButton):
         self.workspace_monitor = -1
         self.workspace_index = -1
 
+        # XXX TODO: this is disabled for now
+        self._preview_workspace = False # preview_workspace
+
         self.hover_enter_debounce = QTimer()
         self.hover_enter_debounce.setInterval(500)
         self.hover_enter_debounce.setSingleShot(True)
@@ -206,7 +209,8 @@ class WorkspaceWidget(BaseWidget):
         self._workspace_buttons: list[WorkspaceButton] = []
         self._hide_empty_workspaces = hide_empty_workspaces
         self.callbacks = callbacks
-        self._preview_workspace = preview_workspace
+        # XXX TODO: this is disabled for now
+        self._preview_workspace = False # preview_workspace
         self._prev_workspace_on_mouse_index = None
         self._workspace_on_mouse_index = None
 
