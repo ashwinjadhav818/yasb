@@ -12,3 +12,4 @@ watchdog
 winsdk
 comtypes
 pycaw
+winshell
