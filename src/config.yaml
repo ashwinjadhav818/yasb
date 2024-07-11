@@ -548,16 +548,16 @@ widgets:
   volume:
     type: "yasb.volume.VolumeWidget"
     options:
-      label: "{volume_icon}  {volume_level}"
-      label_alt: "{volume_icon}  {volume_level}"
-      update_interval: 100
+      label: "{volume_icon} {volume_level}%"
+      label_alt: "{volume_icon} {volume_level}%"
+      update_interval: 1000
+      # You can have as many icons as you want, the first is mute, the rest are divided equally
       volume_icons: 
-        - "\ueee8"  # Icon for muted
-        - "\uf026"  # Icon for 0% volume
-        - "\uf027"  # Icon for 1-25% volume
-        - "\uf027"  # Icon for 26-50% volume
-        - "\uf028"  # Icon for 51-75% volume
-        - "\uf028"  # Icon for 76-100% volume
+        - "\udb81\udf5f"  # Icon for muted
+        - "\udb81\udf5f"  # Icon for 0% volume
+        - "\udb81\udd7f"
+        - "\udb81\udd80"
+        - "\udb81\udd7e"
       callbacks:
         on_left: "exec quick_settings"
         on_middle: "do_nothing"
