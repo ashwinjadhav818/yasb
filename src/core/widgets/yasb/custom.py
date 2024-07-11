@@ -3,7 +3,7 @@ import json
 from PyQt6.QtWidgets import QLabel
 from core.widgets.base import BaseWidget
 from core.validation.widgets.yasb.custom import VALIDATION_SCHEMA
-
+from core.utils.win32.system_function import function_map
 
 class CustomWidget(BaseWidget):
     validation_schema = VALIDATION_SCHEMA
@@ -80,7 +80,7 @@ class CustomWidget(BaseWidget):
 
     def _exec_callback(self):
         self._exec_data = None
-
+       
         if self._exec_cmd:
             proc = subprocess.Popen(self._exec_cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, shell=True)
             output = proc.stdout.read()
@@ -102,4 +102,7 @@ class CustomWidget(BaseWidget):
                 except KeyError:
                     formatted_cmd_args.append(cmd_args)
             cmd_args = formatted_cmd_args
-        subprocess.Popen([cmd, *cmd_args] if cmd_args else [cmd], shell=True)
+        if cmd in function_map:
+            function_map[cmd]()
+        else:
+            subprocess.Popen([cmd, *cmd_args] if cmd_args else [cmd], shell=True)
