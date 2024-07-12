@@ -76,7 +76,7 @@ class RenameWidget(QWidget):
         if self.permanent:
             config = KomorebiConfig()
             config.workspace_name(self.ws_monitor, self.ws_index, new_name)
-            config.save(self)
+            config.save()
 
         self.close()
 
