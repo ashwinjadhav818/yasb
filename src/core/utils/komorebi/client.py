@@ -27,6 +27,11 @@ class KomorebiClient:
             output = subprocess.check_output([self._komorebic_path, "state"], timeout=self._timeout_secs, shell=True)
             return json.loads(output)
 
+    def configuration(self) -> Optional[str]:
+        with suppress(json.JSONDecodeError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            return subprocess.check_output([self._komorebic_path, "configuration"], timeout=self._timeout_secs, shell=True).decode("utf-8")[:-1]
+        return None
+
     def get_screens(self, state: dict) -> list:
         return state['monitors']['elements']
 
@@ -120,6 +125,12 @@ class KomorebiClient:
         except subprocess.SubprocessError:
             logging.exception("Failed to cycle komorebi workspace")
 
+    def workspace_name(self, monitor, workspace, name) -> None:
+        try:
+            subprocess.Popen([self._komorebic_path, "workspace-name", str(monitor), str(workspace), name], shell=True)
+        except subprocess.SubprocessError:
+            logging.exception("Failed to set workspace name")
+
     def toggle_focus_mouse(self) -> None:
         try:
             subprocess.Popen([self._komorebic_path, "toggle-focus-follows-mouse"], shell=True)
@@ -132,16 +143,25 @@ class KomorebiClient:
         except subprocess.SubprocessError:
             logging.exception(f"Failed to change layout of currently active workspace to {layout}")
 
-    def flip_layout(self) -> None:
+    def flip_layout(self, direction: str) -> None:
         try:
             subprocess.Popen(
-                [self._komorebic_path, "flip-layout"],
+                [self._komorebic_path, "flip-layout", direction],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
                 shell=True
             )
         except subprocess.SubprocessError:
             pass
+
+    def flip_layout_horizontal(self) -> None:
+        self.flip_layout("horizontal")
+
+    def flip_layout_vertical(self) -> None:
+        self.flip_layout("vertical")
+
+    def flip_layout_horizontal_and_vertical(self) -> None:
+        self.flip_layout("horizontal-and-vertical")
 
     def toggle(self, toggle_type: str, wait: bool = False) -> None:
         try:

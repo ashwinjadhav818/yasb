@@ -4,9 +4,11 @@ from PyQt6.QtWidgets import QApplication, QWidget, QHBoxLayout, QGridLayout, QFr
 from PyQt6.QtGui import QScreen
 from PyQt6.QtCore import Qt, QRect
 from core.utils.utilities import is_valid_percentage_str, percent_to_float
+from core.utils.win32.utilities import get_monitor_hwnd
 from core.validation.bar import BAR_DEFAULTS
 from BlurWindow.blurWindow import GlobalBlur
-
+from ctypes import windll
+ 
 try:
     from core.utils.win32 import app_bar
     IMPORT_APP_BAR_MANAGER_SUCCESSFUL = True
@@ -33,7 +35,6 @@ class Bar(QWidget):
         super().__init__()
         self.hide()
         self.setScreen(bar_screen)
-
         self._bar_id = bar_id
         self._bar_name = bar_name
         self._alignment = alignment
@@ -56,16 +57,27 @@ class Bar(QWidget):
         self.setWindowFlag(Qt.WindowType.Tool)
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
-
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose) 
+        
         if self._window_flags['always_on_top']:
             self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)
 
+        taskbar = windll.user32.FindWindowA(b'Shell_TrayWnd', None)
+        if self._window_flags['hide_taskbar']:
+            windll.user32.ShowWindow(taskbar, 0) # hide the taskbar
+        else:    
+            windll.user32.ShowWindow(taskbar, 9) # show the taskbar
+
         self._bar_frame = QFrame(self)
         self._bar_frame.setProperty("class", f"bar {class_name}")
-        self._add_widgets(widgets)
-        self.position_bar(init)
 
+        self.position_bar(init)
+        # This has to be exactly between position_bar and _add_widgets, otherwise second screen bar might not work
+        self.monitor_hwnd = get_monitor_hwnd(int(self.winId()))
+        self._add_widgets(widgets)
+
+        
+        
         if blur_effect['enabled']:
             GlobalBlur(
                 self.winId(),
@@ -75,6 +87,7 @@ class Bar(QWidget):
             )
 
         self.screen().geometryChanged.connect(self.on_geometry_changed, Qt.ConnectionType.QueuedConnection)
+
         self.show()
 
     @property
@@ -90,10 +103,13 @@ class Bar(QWidget):
             self.app_bar_manager.create_appbar(
                 self.winId().__int__(),
                 self.app_bar_edge,
-                self._dimensions['height'],
+                self._dimensions['height'] + self._padding['top'] + self._padding['bottom'],
                 self.screen(),
                 scale_screen_height
             )
+            
+    def closeEvent(self, event):
+        self.try_remove_app_bar()
 
     def try_remove_app_bar(self) -> None:
         if self.app_bar_manager:
@@ -114,7 +130,7 @@ class Bar(QWidget):
         screen_scale = self.screen().devicePixelRatio()
         screen_width = self.screen().geometry().width()
         screen_height = self.screen().geometry().height()
-
+ 
         # Fix for non-primary display Windows OS scaling on app startup
         should_downscale_screen_geometry = (
             init and
@@ -128,23 +144,26 @@ class Bar(QWidget):
             screen_height = screen_height / screen_scale
 
         if is_valid_percentage_str(str(self._dimensions['width'])):
-            bar_width = int(screen_width * percent_to_float(self._dimensions['width']))
-
+            bar_width = int(screen_width * percent_to_float(self._dimensions['width']) - self._padding['left'] - self._padding['right'])
         bar_x, bar_y = self.bar_pos(bar_width, bar_height, screen_width, screen_height)
+        bar_x = bar_x + self._padding['left'] 
+        bar_y = bar_y + self._padding['top']
         self.setGeometry(bar_x, bar_y, bar_width, bar_height)
         self._bar_frame.setGeometry(
-            self._padding['left'],
-            self._padding['top'],
-            bar_width - self._padding['left'] - self._padding['right'],
+            0,
+            0,
+            bar_width,
             bar_height
         )
 
         self.try_add_app_bar(scale_screen_height=not should_downscale_screen_geometry)
-
+        
     def _add_widgets(self, widgets: dict[str, list] = None):
         bar_layout = QGridLayout()
+        
         bar_layout.setContentsMargins(0, 0, 0, 0)
         bar_layout.setSpacing(0)
+        
 
         for column_num, layout_type in enumerate(['left', 'center', 'right']):
             layout = QHBoxLayout()
@@ -157,9 +176,10 @@ class Bar(QWidget):
                 layout.addStretch()
 
             for widget in widgets[layout_type]:
-                widget.setFixedHeight(self._bar_frame.geometry().height())
+               
                 widget.parent_layout_type = layout_type
                 widget.bar_id = self.bar_id
+                widget.monitor_hwnd = self.monitor_hwnd
                 layout.addWidget(widget, 0)
 
             if layout_type in ["left", "center"]:
@@ -167,5 +187,5 @@ class Bar(QWidget):
 
             layout_container.setLayout(layout)
             bar_layout.addWidget(layout_container, 0, column_num)
-
+ 
         self._bar_frame.setLayout(bar_layout)

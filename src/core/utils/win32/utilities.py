@@ -2,12 +2,13 @@ import psutil
 import ctypes
 import ctypes.wintypes
 from win32process import GetWindowThreadProcessId
-from win32gui import GetWindowText, GetClassName, GetWindowRect, GetWindowPlacement
+from win32gui import GetWindowText, GetClassName, GetWindowRect, GetWindowPlacement, SetForegroundWindow, ShowWindow, SetActiveWindow
+from win32con import SW_NORMAL, SW_SHOWMAXIMIZED, SW_SHOWMINIMIZED, SW_RESTORE, SW_MAXIMIZE, SW_SHOWDEFAULT
 from win32api import MonitorFromWindow, GetMonitorInfo
+
 from contextlib import suppress
 
 
-SW_MAXIMIZE = 3
 DWMWA_EXTENDED_FRAME_BOUNDS = 9
 dwmapi = ctypes.WinDLL("dwmapi")
 
@@ -98,3 +99,21 @@ def get_hwnd_info(hwnd: int) -> dict:
             'monitor_info': monitor_info,
             'rect': get_window_rect(hwnd)
         }
+
+
+def show_window(hwnd):
+    # We can just call ShowWindow & SetForegroundWindow to bring hwnd to front. 
+    # But that would also take maximized window out of maximized state. 
+    # Using GetWindowPlacement preserves maximized state
+    place = GetWindowPlacement(hwnd)
+
+    # the result is WINDOWPLACEMENT struct represented as
+    # tuple (flags, showCmd, (minposX, minposY), (maxposX, maxposY), (normalposX, normalposY))
+    if place[1] == SW_SHOWMAXIMIZED:
+        ShowWindow(hwnd, SW_SHOWMAXIMIZED)
+    elif place[1] == SW_SHOWMINIMIZED:
+        ShowWindow(hwnd, SW_RESTORE);
+    else:
+        ShowWindow(hwnd, SW_NORMAL);
+
+    SetForegroundWindow(hwnd)
