@@ -96,7 +96,7 @@ bars:
     widgets:
       left:
         [
-          "power_button",
+          "power_menu",
           "komorebi_workspaces", 
           "komorebi_active_layout",
         ]
@@ -490,11 +490,18 @@ widgets:
         on_middle: 'toggle_monocle'
         on_right: 'prev_layout'
 
-  power_button:
-    type: "yasb.power_button.PowerButtonWidget"
+  power_menu:
+    type: "yasb.power_menu.PowerMenuWidget"
     options:
-      label: "\ue62a"
-      layout: ["lock", "restart", "shutDown"]
+      label: "\uf011"
+      blur: False
+      icons:
+        lock: "\uea75"
+        signout: "\udb80\udf43"
+        sleep: "\u23fe"
+        restart: "\uead2"
+        shutdown: "\uf011"
+        cancel: "\udb81\udf3a"
 
   # Some custom widgets
 
