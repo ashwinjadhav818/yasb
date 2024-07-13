@@ -1,7 +1,7 @@
 * {
-    font-family: 'JetBrainsMono NF', 'Courier New', 'Bars', 'Font Awesome 5 Free';
+    font-family: 'JetBrainsMonoNL NFP', 'Courier New', 'Bars', 'Font Awesome 5 Free';
     font-size: 12px;
-    color: #ffffff;   
+    color: #ffffff;
 }
 .bar {
     background-color: rgba(255, 255, 255, 0.062);
@@ -20,7 +20,10 @@
 .widget .label {
     padding: 0 2px
 }
- 
+
+.dialog {
+}
+
 .ws-btn {
     background: rgb(168, 167, 167);
     color: rgb(0, 0 , 0);
@@ -69,6 +72,25 @@
     border: 2px solid rgba(218, 231, 255, 0.8);
     color: rgb(218, 231, 255);
     width: 28px;
+}
+
+.flashing-windows-widget {
+  margin-left: 5px;
+}
+
+.flashing-windows-widget .label {
+  padding: -5px 7px 0 7px;
+  color: #242424;
+  background: #ffdd99;
+  margin-bottom: -1px;
+  border-radius: 3px;
+  margin: 2px;
+}
+
+.rename-widget {
+}
+
+.rename-widget .line-edit {
 }
 
 .komorebi-active-layout .label{

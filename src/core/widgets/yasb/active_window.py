@@ -13,10 +13,10 @@ IGNORED_CLASSES = ['WorkerW','TopLevelWindowForOverflowXamlIsland','Shell_TrayWn
 IGNORED_PROCESSES = ['SearchHost.exe','komorebi.exe']
 IGNORED_YASB_TITLES = [APP_BAR_TITLE]
 IGNORED_YASB_CLASSES = [
-    'Qt620QWindowIcon',
-    'Qt621QWindowIcon',
-    'Qt620QWindowToolSaveBits',
-    'Qt621QWindowToolSaveBits'
+    'Qt662QWindowIcon',
+    'Qt662QWindowIcon',
+    'Qt662QWindowToolSaveBits',
+    'Qt662QWindowToolSaveBits'
 ]
 
 try:
@@ -80,6 +80,7 @@ class ActiveWindowWidget(BaseWidget):
 
         self.foreground_change.connect(self._on_focus_change_event)
         self._event_service.register_event(WinEvent.EventSystemForeground, self.foreground_change)
+        self._event_service.register_event(WinEvent.EventSystemMoveSizeEnd, self.foreground_change)
 
         self.window_name_change.connect(self._on_window_name_change_event)
         self._event_service.register_event(WinEvent.EventObjectNameChange, self.window_name_change)
@@ -95,14 +96,10 @@ class ActiveWindowWidget(BaseWidget):
                 not win_info['title'] or
                 win_info['title'] in IGNORED_YASB_TITLES or
                 win_info['class_name'] in IGNORED_YASB_CLASSES):
-            self.hide()    
+            self.hide()
             return
 
-        monitor_xpos = win_info['monitor_info'].get('rect', None).get('x', None)
-        monitor_ypos = win_info['monitor_info'].get('rect', None).get('y', None)
-
-        if (self._monitor_exclusive and 
-           (self.screen().geometry().x() != monitor_xpos or self.screen().geometry().y() != monitor_ypos) or (win_info['title'] in IGNORED_TITLES or win_info['class_name'] in IGNORED_CLASSES)):
+        if (self._monitor_exclusive and win_info.get('monitor_hwnd', 'Unknown') != self.monitor_hwnd) or (win_info['title'] in IGNORED_TITLES or win_info['class_name'] in IGNORED_CLASSES):
             self.hide()
         else:
             self.show()
@@ -111,9 +108,8 @@ class ActiveWindowWidget(BaseWidget):
     def _on_window_name_change_event(self, hwnd: int, event: WinEvent) -> None:
         if self._win_info and hwnd == self._win_info["hwnd"]:
             self._on_focus_change_event(hwnd, event)
-            
+
     def _update_window_title(self, hwnd: int, win_info: dict, event: WinEvent) -> None:
-        
         try:
             title = win_info['title']
             process = win_info['process']['name']
@@ -122,8 +118,7 @@ class ActiveWindowWidget(BaseWidget):
             if (title.strip() in self._ignore_window['titles'] or
                     class_name in self._ignore_window['classes'] or
                     process in self._ignore_window['processes']):
-                if not self._label_no_window:
-                    return self._window_title_text.hide()
+                return
             else:
                 if self._max_length and len(win_info['title']) > self._max_length:
                     truncated_title = f"{win_info['title'][:self._max_length]}{self._max_length_ellipsis}"

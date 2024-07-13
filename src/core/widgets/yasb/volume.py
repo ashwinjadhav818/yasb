@@ -11,7 +11,6 @@ VK_VOLUME_UP = 0xAF
 VK_VOLUME_DOWN = 0xAE
 KEYEVENTF_KEYUP = 0x0002
 
-UPDATE_INTERVAL = 3000
 devices = AudioUtilities.GetSpeakers()
 interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
 volume = interface.QueryInterface(IAudioEndpointVolume)
@@ -24,6 +23,7 @@ class VolumeWidget(BaseWidget):
         label: str,
         label_alt: str,
         volume_icons: list[str],
+        update_interval: int,
         callbacks: dict[str, str]
     ):
         super().__init__(class_name="volume-widget")
@@ -43,10 +43,11 @@ class VolumeWidget(BaseWidget):
         self.register_callback("update_label", self._update_label)
         self.register_callback("toggle_mute", self.toggle_mute)  # Register the toggle_mute callback
 
-        self.callback_left = "toggle_mute"
+        self.callback_left = callbacks["on_left"]
         self.callback_right = callbacks["on_right"]
         self.callback_middle = callbacks["on_middle"]
         self.callback_timer = "update_label"
+        self.timer_interval = update_interval
 
         self._label.show()
         self._label_alt.hide()
@@ -71,30 +72,26 @@ class VolumeWidget(BaseWidget):
         active_label.setText(active_label_content)
         
         try:
-            volume_icon = self._get_volume_icon()
-            active_label.setText(active_label_content.format(volume=volume_icon))
+            current_mute_status = volume.GetMute()
+            volume_level = round(volume.GetMasterVolumeLevelScalar() * 100)
+            self.setToolTip(f'Volume {volume_level}')
+
+            volume_icon = ""
+            if self._volume_icons:
+                if current_mute_status == 1 and len(self._volume_icons) > 0:
+                    volume_icon = self._volume_icons[0]
+                elif volume_level == 0 and len(self._volume_icons) > 1:
+                    volume_icon = self._volume_icons[1]
+                elif len(self._volume_icons) > 2:
+                    idx = int(volume_level/(100/(len(self._volume_icons) - 2))) + 2
+                    if idx >= len(self._volume_icons):
+                        idx = len(self._volume_icons) - 1
+                    volume_icon = self._volume_icons[idx]
+                active_label.setText(active_label_content.format(volume_icon=volume_icon, volume_level=volume_level))
             
         except Exception:
             active_label.setText(active_label_content)
 
-    def _get_volume_icon(self):
-        current_mute_status = volume.GetMute()
-        current_volume_level = round(volume.GetMasterVolumeLevelScalar() * 100)
-        self.setToolTip(f'Volume {current_volume_level}')
-
-        if current_mute_status == 1:
-            volume_icon = self._volume_icons[0]
-        elif (current_volume_level >= 0 and current_volume_level < 11):
-            volume_icon = self._volume_icons[1]
-        elif (current_volume_level >= 11 and current_volume_level < 30):
-            volume_icon = self._volume_icons[2]
-        elif (current_volume_level >= 30 and current_volume_level < 60):
-            volume_icon = self._volume_icons[3]
-        elif (current_volume_level >= 60):
-            volume_icon = self._volume_icons[4]
-
-        return volume_icon
-    
     def _simulate_key_press(self, vk_code):
         # Simulate key press
         ctypes.windll.user32.keybd_event(vk_code, 0, 0, 0)

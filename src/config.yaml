@@ -96,7 +96,7 @@ bars:
       bottom: 0
       right: 0
     widgets:
-      left: ["komorebi_workspaces", "komorebi_active_layout", "media_player"]
+      left: ["komorebi_workspaces", "komorebi_active_layout", "media_player", "flashing_windows"]
       center: ["active_window"]
       right: [ "explorer_button", "wifi", "cpu", "memory", "disk", "battery", "clock"]
 
@@ -293,7 +293,7 @@ bars:
 #           on_middle: "do_nothing"
 #           on_right: "exec cmd.exe /c start ms-settings:disksandvolumes"
 
-# komorebi_workspaces:
+# komorebi_wcorkspaces:
 #     type: "komorebi.workspaces.WorkspacesWidget"
 #     options:
 #         label_offline: "Komorebi Offline"
@@ -310,6 +310,10 @@ bars:
 #         # Specifies if empty workspaces should be shown in the list of komorebi workspaces. Accepts: boolean
 #         # preview_workspace: False
           # ^ Specifies mouse over behavior on komorebi workspaces. If true, you can see workspace by mouse over and get back by leaving the button area. Accepts: boolean
+#         callbacks:
+#           on_left: "activate" # Activates the clicked workspaces.
+#           on_middle: "rename_temporary" # Renames the clicked workspace temporarily.
+#           on_right: "rename_permanent" # Renames the clicked workspace and updates komorebi's config.
 
 # komorebi_active_layout:
 #     type: "komorebi.active_layout.ActiveLayoutWidget"
@@ -317,6 +321,7 @@ bars:
 #         hide_if_offline: false
 #         # Specifies if the active layout label should be shown when komorebi is offline
 #         label: "{icon}"
+#         layouts: ['bsp', 'columns', 'rows', 'grid', 'vertical_stack', 'horizontal_stack', 'ultrawide_vertical_stack']
 #         # The label shown when an active layout change is detected. Accepts: string containing format options {icon} and {layout_name}
 #         layout_icons:
 #             bsp: "[\\\\]"
@@ -334,7 +339,11 @@ bars:
 #             # callback options include:
 #             # "next_layout" - Cycles the next layout for the active workspace
 #             # "prev_layout" - Cycles the previous layout for the active workspace
-#             # "flip_layout" - Flips layout of active workspace. Works for BSP tiling mode only
+#             # "flip_layout" - Flips layout of active workspace horizontally.
+#             # "flip_layout_horizontal" - Flips layout of active workspace horizontally.
+#             # "flip_layout_vertical" - Flips layout of active workspace vertically.
+#             # "flip_layout_horizontal_and_vertical" - Flips layout of active workspace horizontally and vertically.
+#             # "first_layout" - Selects the first layout
 #             # "toggle_tiling" - Toggles tiling of all windows for the active workspace
 #             # "toggle_float" - Toggles floating of active window for current workspace
 #             # "toggle_monocle" - Toggles monocle mode for active window for current workspace
@@ -411,6 +420,18 @@ widgets:
       max_length_ellipsis: "..."
       monitor_exclusive: true
 
+  flashing_windows:
+    type: "yasb.flashing_windows.FlashingWindowsWidget"
+    options:
+      label: "{win[title]}"
+      label_alt: "[class_name='{win[class_name]}' exe='{win[process][name]}' hwnd={win[hwnd]}]"
+      max_length: 48
+      max_length_ellipsis: "..."
+      callbacks:
+          on_left: "activate_window"
+          on_middle: "toggle_label"
+          on_right: "remove_window"
+
   battery:
     type: "yasb.battery.BatteryWidget"
     options:
@@ -466,12 +487,18 @@ widgets:
       label_default_name: "{index}"
       label_zero_index: false
       hide_empty_workspaces: false
+      preview_workspace: false
+      callbacks:
+        on_left: "activate"
+        on_middle: "rename_temporary"
+        on_right: "rename_permanent"
 
   komorebi_active_layout:
     type: "komorebi.active_layout.ActiveLayoutWidget"
     options:
       hide_if_offline: false
       label: "{icon}"
+      layouts: ['bsp', 'columns', 'rows', 'grid', 'vertical_stack', 'horizontal_stack', 'ultrawide_vertical_stack']
       layout_icons:
         bsp: "[\\\\]"
         columns: "[||]"
@@ -521,16 +548,16 @@ widgets:
   volume:
     type: "yasb.volume.VolumeWidget"
     options:
-      label: "{volume_icon}  {volume_level}"
-      label_alt: "{volume_icon}  {volume_level}"
-      update_interval: 100
+      label: "{volume_icon} {volume_level}%"
+      label_alt: "{volume_icon} {volume_level}%"
+      update_interval: 1000
+      # You can have as many icons as you want, the first is mute, the rest are divided equally
       volume_icons: 
         - "\ueee8"  # Icon for muted
-        - "\uf026"  # Icon for 0% volume
-        - "\uf027"  # Icon for 1-25% volume
-        - "\uf027"  # Icon for 26-50% volume
-        - "\uf028"  # Icon for 51-75% volume
-        - "\uf028"  # Icon for 76-100% volume
+        - "\ueee8"  # Icon for 0% volume
+        - "\uf026"
+        - "\uf027"
+        - "\uf028"
       callbacks:
         on_left: "exec quick_settings"
         on_middle: "do_nothing"
@@ -558,8 +585,9 @@ widgets:
   traffic:
     type: "yasb.traffic.TrafficWidget"
     options:
-      label: "\ueb01 \ueab4 {download_speed} | \ueab7 {upload_speed}"
-      label_alt: "\ueb01 \ueab4 {upload_speed} | \ueab7 {download_speed}"
+      # can be: download_speed, download_justified, download_category, and same for upload
+      label: "\ueb01 \ueab4 {download_justified} | \ueab7 {upload_justified}"
+      label_alt: "\ueb01 \ueab4 {download_category} | \ueab7 {upload_category}"
       update_interval: 1000 # Update interval should be a multiple of 1000
       callbacks:
         on_right: "exec cmd /c Taskmgr"

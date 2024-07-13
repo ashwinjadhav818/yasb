@@ -1,4 +1,5 @@
 import logging
+import re
 import subprocess
 import re
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QFrame
@@ -21,7 +22,9 @@ class BaseWidget(QWidget):
         self._widget_frame_layout = QHBoxLayout()
         self.widget_layout = QHBoxLayout()
         self.timer_interval = timer_interval
+        self.bar = None
         self.bar_id = None
+        self.monitor_hwnd = None
 
         if class_name:
             self._widget_frame.setProperty("class", f"widget {class_name}")
