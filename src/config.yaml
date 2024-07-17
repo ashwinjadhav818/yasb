@@ -81,7 +81,7 @@ bars:
       position: "top"
       center: true
     blur_effect:
-      enabled: false
+      enabled: true
       acrylic: true
       dark: false
     window_flags:
@@ -102,10 +102,12 @@ bars:
           "power_menu",
           "komorebi_workspaces", 
           "komorebi_active_layout",
+          "media_player",
         ]
       center: ["active_window"]
       right:
         [
+          "weather",
           "cpu",
           "memory",
           "volume",
@@ -509,6 +511,33 @@ bars:
 #             on_middle: "do_nothing"
 #             on_right: "do_nothing"
 
+#  weather:
+#    type: "yasb.weather.WeatherWidget"
+#    options:
+#      label: "{icon} {temp}" #{icon} {temp} {humidity}
+#      # Label options  {icon} {temp} {humidity} {temp_alt} 
+#      label_alt: "{temp_alt}"
+#      update_interval: 1800 #Update interval in seconds, Min 600
+#      temp_format: 'celsius'
+#      location_id: 'aac619af0e4a1f0ffbab44e0cd35501d61e2c5d4337767432f5cbac90957d7a1'
+#      # To get your own location_id, go to https://weather.com & search your location.
+#      # Pnce you choose your location, you can see the location_id in the URL(64 chars long hex string)
+#      # Like this: https://weather.com/weather/today/l/aac619af0e4a1f0ffbab44e0cd35501d61e2c5d4337767432f5cbac90957d7a1
+#      callbacks:
+#        on_right: "toggle_label"
+#      icons: 
+#        sunnyDay: "\ue30d"
+#        clearNight: "\ue32b"
+#        cloudyFoggyDay: "\ue312"
+#        cloudyFoggyNight: "\ue311"
+#        rainyDay: "\udb81\ude7e "
+#        rainyNight: "\udb81\ude7e "
+#        snowyIcyDay: "\udb81\udd98 "
+#        snowyIcyNight: "\udb81\udd98 "
+#        severe: "\uebaa"
+#        default: "\uebaa"
+
+
 widgets:
   active_window:
     type: "yasb.active_window.ActiveWindowWidget"
@@ -728,6 +757,31 @@ widgets:
         shutdown: "\uf011"
         cancel: "\udb81\udf3a"
 
+  weather:
+    type: "yasb.weather.WeatherWidget"
+    options:
+      label: "{icon} {temp}" #{icon} {temp} {humidity}
+      label_alt: "{temp_alt}"
+      update_interval: 1800 #Update interval in seconds, Min 600
+      temp_format: 'celsius'
+      location_id: 'aac619af0e4a1f0ffbab44e0cd35501d61e2c5d4337767432f5cbac90957d7a1'
+      callbacks:
+        on_right: "toggle_label"
+      icons: 
+        sunnyDay: "\ue30d"
+        clearNight: "\ue32b"
+        cloudyFoggyDay: "\ue312"
+        cloudyFoggyNight: "\ue311"
+        rainyDay: "\udb81\ude7e "
+        rainyNight: "\udb81\ude7e "
+        snowyIcyDay: "\udb81\udd98 "
+        snowyIcyNight: "\udb81\udd98 "
+        severe: "\uebaa"
+        default: "\uebaa"
+      # to get your own location_id, go to https://weather.com & search your location.
+      # once you choose your location, you can see the location_id in the URL(64 chars long hex string)
+      # like this: https://weather.com/weather/today/l/aac619af0e4a1f0ffbab44e0cd35501d61e2c5d4337767432f5cbac90957d7a1
+
   # Some custom widgets
 
   explorer_button:
@@ -756,18 +810,6 @@ widgets:
         on_left: "toggle_label"
         on_middle: "exec cmd /c ncpa.cpl"                           # open network settings
         on_right: "exec cmd /c start https://ipinfo.io/{data[ip]} " # open ipinfo in browser
-
-  weather:
-    type: "yasb.custom.CustomWidget"
-    options:
-      label: "\uf0c2  {data[current_condition][0][temp_C]}\u00b0c"
-      label_alt: "\uf0c2  {data[current_condition][0][weatherDesc][0][value]}"
-      class_name: "weather-widget"
-      exec_options:
-        run_cmd: "curl.exe  wttr.in/Nashik?format=j1"
-        # run every hour
-        run_interval: 3600000
-        return_format: "json"
   
   lang:
     type: "yasb.custom.CustomWidget"
