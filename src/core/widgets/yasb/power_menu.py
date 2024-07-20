@@ -1,16 +1,15 @@
 import sys
-import subprocess
 from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QStyleOption, QStyle
 from PyQt6 import QtCore, QtGui
-from PyQt6.QtCore import Qt, QPropertyAnimation, pyqtSignal, QCoreApplication
+from PyQt6.QtCore import Qt, QPropertyAnimation, pyqtSignal
 from BlurWindow.blurWindow import GlobalBlur
 from core.widgets.base import BaseWidget
 from core.validation.widgets.yasb.power_menu import VALIDATION_SCHEMA
 from core.config import get_stylesheet_path
+from core.utils.win32.power import PowerOperations
 
 class ClickableLabel(QLabel):
     clicked = pyqtSignal()
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -19,15 +18,49 @@ class ClickableLabel(QLabel):
             self.clicked.emit()
         super().mouseReleaseEvent(event)
 
+class AnimatedWidget(QWidget):
+    def __init__(self, animation_duration, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.animation_duration = animation_duration
+        self.animation = QPropertyAnimation(self, b"windowOpacity")
+
+    def fade_in(self):
+        self.animation.setDuration(self.animation_duration)
+        self.animation.setStartValue(0)
+        self.animation.setEndValue(1)
+        self.animation.start()
+
+    def fade_out(self):
+        self.animation.setDuration(self.animation_duration)
+        self.animation.setStartValue(1)
+        self.animation.setEndValue(0)
+        self.animation.finished.connect(self.on_fade_out_finished)
+        self.animation.start()
+
+    def on_fade_out_finished(self):
+        self.hide()
+
+class OverlayWidget(AnimatedWidget):
+    def __init__(self, animation_duration):
+        super().__init__(animation_duration)
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Tool)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+
+    def update_geometry(self, screen_geometry):
+        self.setGeometry(screen_geometry)
+
 class PowerMenuWidget(BaseWidget):
     validation_schema = VALIDATION_SCHEMA
 
-    def __init__(self, label: str, blur: bool, icons: dict[str, str]):
-        super().__init__(0, class_name="system-widget")
+    def __init__(self, label: str, blur: bool, blur_background: bool, animation_duration: int, button_row: int, buttons: dict[str, list[str]]):
+        super().__init__(0, class_name="power-menu-widget")
         
-        self.icons = icons  # Store the icons dictionary
+        self.buttons = buttons
         self.blur = blur
-        
+        self.blur_background = blur_background
+        self.animation_duration = animation_duration
+        self.button_row = button_row
+
         self._button = ClickableLabel(label)
         self._button.setProperty("class", "label power-button")
         self.widget_layout.addWidget(self._button)
@@ -37,103 +70,102 @@ class PowerMenuWidget(BaseWidget):
     def show_main_window(self):
         if self.main_window and self.main_window.isVisible():
             self.main_window.fade_out()
+            self.main_window.overlay.fade_out()
         else:
-            self.main_window = MainWindow(self._button, self.icons, self.blur)
+            self.main_window = MainWindow(self._button, self.blur, self.blur_background, self.animation_duration, self.button_row, self.buttons)
+            self.main_window.overlay.fade_in()
+            self.main_window.overlay.show()
             self.main_window.show()
+            
 
-class MainWindow(QWidget):
-    def __init__(self, parent_button, icons, blur):
-        super(MainWindow, self).__init__()
+class MainWindow(AnimatedWidget):
+    def __init__(self, parent_button, blur, blur_background, animation_duration, button_row, buttons):
+        super(MainWindow, self).__init__(animation_duration)
 
-        self.blur = blur
-        self.icon_signout = icons['signout']
-        self.icon_lock = icons['lock']
-        self.icon_sleep = icons['sleep']
-        self.icon_restart = icons['restart']
-        self.icon_shutdown = icons['shutdown']
-        self.icon_cancel = icons['cancel']
+        self.overlay = OverlayWidget(animation_duration)
+        self.parent_button = parent_button
 
-        self.setProperty("class", "power-button-widget")
-
+        self.setProperty("class", "power-menu-popup")
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Tool)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        # Create layout for buttons
+
+        self.buttons_info = []
+        for button_name, button_info in buttons.items():
+            action_method_name = f'{button_name}_action'
+            if hasattr(self, action_method_name):
+                action_method = getattr(self, action_method_name)
+            else:
+                action_method = self.cancel_action  # Fallback to a cancel action
+            icon, text = button_info
+            self.buttons_info.append((icon, text, action_method, button_name))
+
+
+
         main_layout = QVBoxLayout()
         button_layout1 = QHBoxLayout()
         button_layout2 = QHBoxLayout()
+        button_layout3 = QHBoxLayout()
+        button_layout4 = QHBoxLayout()
 
-        if self.blur:
-            GlobalBlur(self.winId(),Dark=True)
+        self.power_operations = PowerOperations(self, self.overlay)
 
-
-        # Button labels and icons with their corresponding actions
-        buttons_info = [
-            (self.icon_signout, 'Sign out', self.signout, "signout"),
-            (self.icon_lock, 'Lock', self.lock, "lock"),
-            (self.icon_sleep, 'Sleep', self.sleep, "sleep"),
-            (self.icon_restart, 'Restart', self.restart, "restart"),
-            (self.icon_shutdown, 'Shut Down', self.shutdown, "shutdown"),
-            (self.icon_cancel, 'Cancel', self.cancel, "cancel")
-        ]
-        # Create buttons with icons and text
-        for i, (icon, label, action, class_name) in enumerate(buttons_info):
+        for i, (icon, label, action, class_name) in enumerate(self.buttons_info):
             button = QPushButton(self)
-            button.setProperty("class", f"shutdown-buttons {class_name}")
-            # Create a layout for the button content
+            button.setProperty("class", f"button {class_name}")
             button_layout = QVBoxLayout(button)
-            # Create QLabel for the icon
-            icon_label = QLabel(f'{icon}', self)
-            icon_label.setProperty("class", "shutdown-icons")
-            icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            icon_label.setTextFormat(Qt.TextFormat.RichText)
-            # Create QLabel for the text
+
+            # Only add icon label if icon is not empty or None
+            if icon:
+                icon_label = QLabel(f'{icon}', self)
+                icon_label.setProperty("class", "icon")
+                icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                icon_label.setTextFormat(Qt.TextFormat.RichText)
+                button_layout.addWidget(icon_label)
+
             text_label = QLabel(label, self)
-            text_label.setProperty("class", "shutdown-label")
+            text_label.setProperty("class", "label")
             text_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            # Add labels to the button layout
-            button_layout.addWidget(icon_label)
             button_layout.addWidget(text_label)
-            if i < 3:
+
+            if i < button_row:
                 button_layout1.addWidget(button)
-            else:
+            elif i < (button_row * 2):
                 button_layout2.addWidget(button)
-            button.clicked.connect(action)  # Connect the button click to its action
-            # Install event filter for hover events
+            elif i < (button_row * 3):
+                button_layout3.addWidget(button)
+            else:
+                button_layout4.addWidget(button)
+            
+            button.clicked.connect(action)
             button.installEventFilter(self)
 
         main_layout.addLayout(button_layout1)
         main_layout.addLayout(button_layout2)
+        main_layout.addLayout(button_layout3)
+        main_layout.addLayout(button_layout4)
         self.setLayout(main_layout)
         self.apply_stylesheet(self, get_stylesheet_path())
-        # Adjust size to fit the contents
         self.adjustSize()
-        # Center the window on the screen
         self.center_on_screen()
-        # Start fade-in animation
+        
+        if blur:
+            GlobalBlur(self.winId())
+        if blur_background:
+            GlobalBlur(self.overlay.winId())
+
         self.fade_in()
 
     def center_on_screen(self):
-        screen_geometry = QApplication.primaryScreen().geometry()
+        screen = QApplication.screenAt(self.parent_button.mapToGlobal(QtCore.QPoint(0, 0)))
+        if screen is None:
+            screen = QApplication.primaryScreen()
+        screen_geometry = screen.geometry()
         window_geometry = self.geometry()
-        x = (screen_geometry.width() - window_geometry.width()) // 2
-        y = (screen_geometry.height() - window_geometry.height()) // 2
+        x = (screen_geometry.width() - window_geometry.width()) // 2 + screen_geometry.x()
+        y = (screen_geometry.height() - window_geometry.height()) // 2 + screen_geometry.y()
         self.move(x, y)
-
-    def fade_in(self):
-        self.animation = QPropertyAnimation(self, b"windowOpacity")
-        self.animation.setDuration(200)
-        self.animation.setStartValue(0)
-        self.animation.setEndValue(1)
-        self.animation.start()
-
-    def fade_out(self):
-        self.animation = QPropertyAnimation(self, b"windowOpacity")
-        self.animation.setDuration(200)
-        self.animation.setStartValue(1)
-        self.animation.setEndValue(0)
-        self.animation.finished.connect(self.close)
-        self.animation.start()
-    
+        self.overlay.update_geometry(screen_geometry)  # Update overlay geometry to match screen
+   
     def apply_stylesheet(self, app, path):
         with open(path, "r") as f:
             stylesheet = f.read()
@@ -147,46 +179,38 @@ class MainWindow(QWidget):
 
     def eventFilter(self, source, event):
         if event.type() == QtCore.QEvent.Type.Enter and isinstance(source, QPushButton):
-            source.setProperty("class", f"shutdown-buttons {source.property('class').split()[1]} hover")
+            source.setProperty("class", f"button {source.property('class').split()[1]} hover")
             source.style().unpolish(source)
             source.style().polish(source)
         elif event.type() == QtCore.QEvent.Type.Leave and isinstance(source, QPushButton):
-            source.setProperty("class", f"shutdown-buttons {source.property('class').split()[1]}")
+            source.setProperty("class", f"button {source.property('class').split()[1]}")
             source.style().unpolish(source)
             source.style().polish(source)
         return super(MainWindow, self).eventFilter(source, event)
-    
-    def signout(self):
-        self.hide()
-        QCoreApplication.exit(0)
-        subprocess.Popen("shutdown /l", stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, shell=True)
 
-    def lock(self):
-        self.hide()
-        subprocess.Popen("rundll32.exe user32.dll,LockWorkStation", stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, shell=True)
+    def signout_action(self):
+        self.power_operations.signout()
 
-    def sleep(self):
-        self.hide()
-        subprocess.Popen("rundll32.exe powrprof.dll,SetSuspendState Sleep", stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, shell=True)
+    def lock_action(self):
+        self.power_operations.lock()
 
-    def restart(self):
-        self.hide()
-        QCoreApplication.exit(0)
-        subprocess.Popen("shutdown /r /f /t 0", stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, shell=True)
+    def sleep_action(self):
+        self.power_operations.sleep()
 
-    def shutdown(self):
-        self.hide()
-        QCoreApplication.exit(0)
-        subprocess.Popen("shutdown /s /t 0", stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, shell=True)
-        # try:
-        #     self.hide()
-        #     QCoreApplication.exit(0)
-        #     process = subprocess.run(["shutdown", "/s", "/t", "0"])
-        # except subprocess.CalledProcessError as e:
-        #     print(f"An error occurred: {e}")          
-        # subprocess.Popen("shutdown /s /t 60", stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, shell=True)
-        # self.hide()
-        # sys.exit()
+    def restart_action(self):
+        self.power_operations.restart()
 
-    def cancel(self):
-        self.fade_out()
+    def shutdown_action(self):
+        self.power_operations.shutdown()
+
+    def force_shutdown_action(self):
+        self.power_operations.force_shutdown()
+
+    def force_restart_action(self):
+        self.power_operations.force_restart()
+
+    def hibernate_action(self):
+        self.power_operations.hibernate()
+
+    def cancel_action(self):
+        self.power_operations.cancel()
