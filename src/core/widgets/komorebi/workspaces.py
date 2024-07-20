@@ -14,7 +14,6 @@ from core.utils.komorebi.config import KomorebiConfig
 from core.validation.widgets.komorebi.workspaces import VALIDATION_SCHEMA
 from ctypes import windll
 import win32con
-from core.utils.win32.utilities import show_window
 
 try:
     from core.utils.komorebi.event_listener import KomorebiEventListener
@@ -62,7 +61,6 @@ class RenameWidget(QWidget):
         hwnd = int(self.winId())
         exStyle = windll.user32.GetWindowLongPtrW(hwnd, win32con.GWL_EXSTYLE)
         windll.user32.SetWindowLongPtrW(hwnd, win32con.GWL_EXSTYLE, exStyle & ~win32con.WS_EX_NOACTIVATE & ~win32con.WS_EX_TOPMOST)
-        show_window(hwnd)
         self.edit_widget.selectAll()
         self.edit_widget.setFocus()
 
