@@ -1,7 +1,8 @@
 import logging
 from collections import deque
+from PyQt6.QtGui import QCursor
 from PyQt6.QtWidgets import QWidget, QLabel
-from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSignal
 from core.utils.win32.utilities import get_monitor_hwnd
 from core.event_service import EventService
 from core.event_enums import KomorebiEvent
@@ -42,6 +43,7 @@ class ActiveLayoutWidget(BaseWidget):
     k_signal_connect = pyqtSignal(dict)
     k_signal_disconnect = pyqtSignal()
     k_signal_layout_change = pyqtSignal(dict, dict)
+    k_signal_update = pyqtSignal(dict, dict)
 
     validation_schema = VALIDATION_SCHEMA
     event_listener = KomorebiEventListener
@@ -58,7 +60,8 @@ class ActiveLayoutWidget(BaseWidget):
         self._komorebi_screen = None
         self._komorebi_workspaces = []
         self._focused_workspace = {}
-
+        # Set the cursor to be a pointer when hovering over the button
+        self.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self._active_layout_text = QLabel()
         self._active_layout_text.setProperty("class", "label")
         
@@ -114,6 +117,8 @@ class ActiveLayoutWidget(BaseWidget):
     def _register_signals_and_events(self):
         active_layout_change_event_watchlist = [
             KomorebiEvent.ChangeLayout,
+            KomorebiEvent.FocusWorkspaceNumber,
+            KomorebiEvent.FocusMonitorWorkspaceNumber,
             KomorebiEvent.TogglePause,
             KomorebiEvent.ToggleTiling,
             KomorebiEvent.ToggleMonocle,
@@ -123,10 +128,12 @@ class ActiveLayoutWidget(BaseWidget):
         self.k_signal_connect.connect(self._on_komorebi_connect_event)
         self.k_signal_disconnect.connect(self._on_komorebi_disconnect_event)
         self.k_signal_layout_change.connect(self._on_komorebi_layout_change_event)
+        self.k_signal_update.connect(self._on_komorebi_layout_change_event)
 
         self._event_service.register_event(KomorebiEvent.KomorebiConnect,  self.k_signal_connect)
         self._event_service.register_event(KomorebiEvent.KomorebiDisconnect, self.k_signal_disconnect)
-
+        self._event_service.register_event(KomorebiEvent.KomorebiUpdate, self.k_signal_update)
+        
         for event_type in active_layout_change_event_watchlist:
             self._event_service.register_event(event_type, self.k_signal_layout_change)
 
