@@ -62,21 +62,12 @@ class Bar(QWidget):
         if self._window_flags['always_on_top']:
             self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)
 
-        taskbar = windll.user32.FindWindowA(b'Shell_TrayWnd', None)
-        if self._window_flags['hide_taskbar']:
-            windll.user32.ShowWindow(taskbar, 0) # hide the taskbar
-        else:    
-            windll.user32.ShowWindow(taskbar, 9) # show the taskbar
-
         self._bar_frame = QFrame(self)
         self._bar_frame.setProperty("class", f"bar {class_name}")
 
         self.position_bar(init)
-        # This has to be exactly between position_bar and _add_widgets, otherwise second screen bar might not work
         self.monitor_hwnd = get_monitor_hwnd(int(self.winId()))
         self._add_widgets(widgets)
-
-        
         
         if blur_effect['enabled']:
             GlobalBlur(

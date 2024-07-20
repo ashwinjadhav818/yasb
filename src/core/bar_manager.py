@@ -10,7 +10,7 @@ from core.utils.utilities import get_screen_by_name
 from core.event_service import EventService
 from core.config import get_stylesheet, get_config
 from copy import deepcopy
-import core.utils.alert_dialog
+
 
 class BarManager(QObject):
     styles_modified = pyqtSignal()
@@ -40,7 +40,6 @@ class BarManager(QObject):
 
         if stylesheet and (stylesheet != self.stylesheet):
             self.stylesheet = stylesheet
-            core.utils.alert_dialog.dialog_stylesheet = stylesheet
             for bar in self.bars:
                 bar.setStyleSheet(self.stylesheet)
             logging.info("Successfully loaded updated stylesheet and applied to all bars.")

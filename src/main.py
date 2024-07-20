@@ -32,13 +32,11 @@ def main():
 
     # Start Application
     exit_status = app.exec()
-    print("SDFSDFSDF")
 
     # Before Application Exit
     if observer:
         observer.stop()
         observer.join()
-    print("SDFSDFSDF")
     exit(exit_status)
 
 if __name__ == "__main__":
@@ -59,4 +57,3 @@ if __name__ == "__main__":
         logging.getLogger().handlers = [h for h in logging.getLogger().handlers if not isinstance(h, logging.StreamHandler)]
         logging.exception("Exception in main()")
         raise
-

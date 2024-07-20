@@ -104,7 +104,3 @@ class WinEvent(Event):
 
 class ShellEvent(Event):
     Flashing = 0x8006
-
-class FlashListEvent(Event):
-    Publish = 0x0001
-    Remove = 0x0002

@@ -4,7 +4,6 @@ from settings import APP_NAME
 from PyQt6.QtWidgets import QMessageBox, QTextEdit, QSizePolicy
 from PyQt6.QtCore import Qt
 
-dialog_stylesheet = None
 
 class AlertDialog(QMessageBox):
 
@@ -19,13 +18,8 @@ class AlertDialog(QMessageBox):
             show_ok: bool = False,
     ):
         super().__init__()
-        self.setProperty("class", "dialog")
-        if dialog_stylesheet is not None:
-            self.setStyleSheet(dialog_stylesheet)
         self.setWindowTitle(title)
         self.setTextInteractionFlags(Qt.TextInteractionFlag.LinksAccessibleByMouse)
-        self.setWindowModality(Qt.WindowModality.ApplicationModal)
-        self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.FramelessWindowHint)
         self.setIcon(icon)
         self.setText(message)
 

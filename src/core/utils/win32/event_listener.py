@@ -8,13 +8,11 @@ import PyQt6.sip
 from win32gui import GetForegroundWindow
 from core.utils.win32.windows import WinEventProcType, WinEvent, ShellEvent, user32, ole32, msg
 from core.event_service import EventService
-from core.utils.win32.flashing_window_manager import FlashingWindowManager
 
 class ShellEventFilter(QAbstractNativeEventFilter):
     def __init__(self):
         QAbstractNativeEventFilter.__init__(self)
         self._event_service = EventService()
-        self._flashing_window_manager = FlashingWindowManager()
 
         # We create a hidden QWidget and make it a native window with winId.
         # This is because shell events need an active windows message loop, and the
