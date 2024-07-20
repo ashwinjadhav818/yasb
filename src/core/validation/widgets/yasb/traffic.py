@@ -1,6 +1,6 @@
 DEFAULTS = {
     "label": "\ueb01 \ueab4 {download_speed} | \ueab7 {upload_speed}",
-    "label_alt": "\ueb01 \ueab4 {upload_category} | \ueab7 {download_category}",
+    "label_alt": "\ueb01 \ueab4 {upload_speed} | \ueab7 {download_speed}",
     "update_interval": 1000,
     "callbacks": {
         "on_left": "toggle_label",

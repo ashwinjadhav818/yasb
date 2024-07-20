@@ -1,5 +1,4 @@
 import psutil
-from typing import Tuple
 from humanize import naturalsize
 from core.widgets.base import BaseWidget
 from core.validation.widgets.yasb.traffic import VALIDATION_SCHEMA
@@ -68,17 +67,13 @@ class TrafficWidget(BaseWidget):
         active_label_formatted = active_label_content
 
         try:
-            upload_speed, download_speed, upload_justified, download_justified, upload_category, download_category = self._get_speed()
+            upload_speed, download_speed = self._get_speed()
         except Exception:
-            upload_speed, download_speed, upload_justified, download_justified, upload_category, download_category = "N/A", "N/A", "N/A", "N/A", "N/A", "N/A"
+            upload_speed, download_speed = "N/A", "N/A"
 
         label_options = [
             ("{upload_speed}", upload_speed),
             ("{download_speed}", download_speed),
-            ("{upload_justified}", upload_justified),
-            ("{download_justified}", download_justified),
-            ("{upload_category}", upload_category),
-            ("{download_category}", download_category),
         ]
 
         for option, value in label_options:
@@ -86,41 +81,25 @@ class TrafficWidget(BaseWidget):
 
         active_label.setText(active_label_formatted)
 
-    def _get_speed(self) -> Tuple[str, str, str, str, str, str]:
+    def _get_speed(self) -> [str, str]:
         current_io = psutil.net_io_counters()
         upload_diff = current_io.bytes_sent - self.bytes_sent
         download_diff = current_io.bytes_recv - self.bytes_recv
 
         if upload_diff < 1024:
-            upload_speed = f"{upload_diff}  B/s"
+            upload_speed = f"{upload_diff} B/s"
         else:
             upload_speed = naturalsize(
                 (current_io.bytes_sent - self.bytes_sent) // self.interval,
             ) + "/s"
 
         if download_diff < 1024:
-            download_speed = f"{download_diff}  B/s"
+            download_speed = f"{download_diff} B/s"
         else:
             download_speed = naturalsize(
                 (current_io.bytes_recv - self.bytes_recv) // self.interval,
             ) + "/s"
 
-        def get_category(speed):
-            if speed == 0:
-                return " 0"
-            elif speed < 1024:
-                return " B"
-            elif speed < 1024*1024:
-                return "kB"
-            elif speed < 1024*1024*1024:
-                return "MB"
-            elif speed < 1024*1024*1024*1024:
-                return "GB"
-            elif speed < 1024*1024*1024*1024*1024:
-                return "TB"
-            else:
-                return "??"
-
         self.bytes_sent = current_io.bytes_sent
         self.bytes_recv = current_io.bytes_recv
-        return upload_speed, download_speed, str.rjust(upload_speed, 9), str.rjust(download_speed, 9), get_category(upload_diff), get_category(download_diff)
+        return upload_speed, download_speed
