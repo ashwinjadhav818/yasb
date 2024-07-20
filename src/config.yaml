@@ -604,8 +604,8 @@ widgets:
   memory:
     type: "yasb.memory.MemoryWidget"
     options:
-      label: "\uf200  {virtual_mem_free}"
-      label_alt: "\uf200  {virtual_mem_percent}%"
+      label: "\uf200 {virtual_mem_free}"
+      label_alt: "\uf200 {virtual_mem_percent}%"
       update_interval: 5000
       callbacks:
         on_right: "exec cmd /c Taskmgr"
@@ -614,7 +614,7 @@ widgets:
     type: "komorebi.workspaces.WorkspaceWidget"
     options:
       label_offline: "Komorebi Offline"
-      label_workspace_btn: "{name}"
+      label_workspace_btn: "\uf4c3"
       label_default_name: "{index}"
       label_zero_index: false
       hide_empty_workspaces: false
@@ -651,7 +651,7 @@ widgets:
     type: "yasb.wifi.WifiWidget"
     options:
       label: "{wifi_icon}"
-      label_alt: "{wifi_icon}  {wifi_name}"
+      label_alt: "{wifi_icon} {wifi_name}"
       update_interval: 5000
       wifi_icons:
         - "\udb82\udd2e" # 0% strength (no wifi)
@@ -722,41 +722,24 @@ widgets:
       callbacks:
         on_right: "exec cmd /c Taskmgr"
 
-  komorebi_active_layout:
-    type: "komorebi.active_layout.ActiveLayoutWidget"
-    options:
-      hide_if_offline: false
-      label: "{icon}"
-      layout_icons:
-        bsp: "[\\\\]"
-        columns: "[||]"
-        rows: "[==]"
-        grid: "[G]"
-        vertical_stack: "[V]="
-        horizontal_stack: "[H]="
-        ultrawide_vertical_stack: "||="
-        monocle: "[M]"
-        maximised: "[X]"
-        floating: "><>"
-        paused: "[P]"
-      callbacks:
-        on_left: 'next_layout'
-        on_middle: 'toggle_monocle'
-        on_right: 'prev_layout'
-
   power_menu:
     type: "yasb.power_menu.PowerMenuWidget"
     options:
       label: "\uf011"
-      blur: False
-      icons:
-        lock: "\uea75"
-        signout: "\udb80\udf43"
-        sleep: "\u23fe"
-        restart: "\uead2"
-        shutdown: "\uf011"
-        cancel: "\udb81\udf3a"
-
+      blur_background: true
+      animation_duration: 200 # Milisecond 
+      button_row: 3 # Number of buttons in row, min 1 max 5
+      buttons:
+        lock: ["\uea75","Lock"]
+        # signout: ["\udb80\udf43","Sign out"]
+        sleep: ["\u23fe","Sleep"]
+        shutdown: ["\uf011","Shut Down"]
+        restart: ["\uead2","Restart"]
+        hibernate: ["\uf28e","Hibernate"]
+        cancel: ["\udb81\udf3a","Cancel"]
+        #force_shutdown: ["\uf011","Force Shut Down"]
+        #force_restart: ["\uead2","Force Restart"]
+ 
   weather:
     type: "yasb.weather.WeatherWidget"
     options:

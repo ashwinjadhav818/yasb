@@ -1,33 +1,44 @@
+/*
+.widget .label {} -> Global label for all
+.active-window-widget {} -> Styles specific to the active window widget
+.clock-widget {} -> Styles specific to the clock widget
+.cpu-widget {} -> Styles specific to the CPU widget
+.memory-widget {} -> Styles specific to the memory widget
+.weather-widget {} -> Styles specific to the weather widget
+.komorebi-workspaces {} -> Styles specific to komorebi workspaces
+.komorebi-active-layout {} -> Styles specific to komorebi active layout
+.volume-widget {} -> Styles specific to the volume widget 
+.apps-widget {} -> Styles specific to the apps widget
+.power-menu-widget {} -> Styles for the power menu button widget
+.power-menu-popup {} -> Styles for the power menu popup widget
+.power-menu-popup > .button {} -> Styles for power buttons inside the popup 
+.power-menu-popup > .button > .icon,
+.power-menu-popup > .button > .label {} -> Styles for power buttons icons and labels inside the popup 
+*/
 * {
-    font-family: 'JetBrainsMonoNL NFP', 'Courier New', 'Bars', 'Font Awesome 5 Free';
-    font-size: 12px;
-    color: #ffffff;
+    font-family: 'JetBrainsMono NFP';
+    font-size: 13px;
+    color: #a9aec2;
 }
-.bar {
-    background-color: rgba(255, 255, 255, 0.062);
-    padding: 0 8px; 
+.yasb-bar {
+    border: 1px solid rgb(41, 42, 58);
+    padding: 0 8px;
+    border-radius: 7px;
 }
 .container-left,
 .container-center,
 .container-right {
     margin: 0;
-    padding: 0;
+    padding: 0
 }
  
 .widget {
-    padding: 0 2px 3px 2px; 
+    padding: 0 2px;    
 }
 .widget .label {
-    padding: 0 2px
+    padding: 0 2px 1px 2px; 
 }
-
-/* .dialog { */
-/* } */
-/**/
-/**/
-/* .dialog { */
-/* } */
-
+ 
 .ws-btn {
     background: rgb(168, 167, 167);
     color: rgb(0, 0 , 0);
@@ -45,164 +56,94 @@
     color: rgb(0, 0, 0);
     font-weight: bold;
 }
-
 .clock-widget .label {
-    padding: 0px 4px;
+    padding-bottom: 3px;
     background: none;
-    font-size: 13px;
+    padding-bottom: 2px;
+    font-weight: 600;
 }
-
 .active-window-widget .label {
-    color: #ffffff;
     text-transform: capitalize;
-    font-size: 13px;
+    padding-bottom: 2px;
+    font-weight: 600;
 }
-.komorebi-workspaces {
-    padding: 0 2px
+.active-window-widget .label.icon {
+    padding-bottom:0px;
 }
 .komorebi-workspaces .ws-btn {
-    border-radius: 5px;
-    padding: 0 2px;
-    color:  rgba(218, 231, 255, 0.3);
+    border-radius: 6px;
+    font-size: 26px;
+    width: 14px;
+    height: 14px;
+    padding: 0 2px 0 2px;
+    color: rgb(88, 91, 112);
     background-color: rgba(0, 0, 0, 0);
+    text-align: center;
 }
 .komorebi-workspaces .ws-btn:hover {
-    color:  rgba(218, 231, 255, 0.5);
+    color: rgba(218, 231, 255, 0.5);
 }
 .komorebi-workspaces .ws-btn.populated {
-    color:  rgba(218, 231, 255, 0.7);
+    color: rgb(127, 132, 156);
 }
 .komorebi-workspaces .ws-btn.active {
-    border: 2px solid rgba(218, 231, 255, 0.8);
-    color: rgb(218, 231, 255);
-    width: 28px;
+    background-color: rgb(147, 153, 178);
+    color: rgba(0,0,0,0);
+    width: 32px;
+}
+.komorebi-active-layout .label {
+    font-weight: 600;
 }
 
-.flashing-windows-widget {
-  margin-left: 5px;
+.weather-widget .label {
+    font-weight: 600;
 }
-
-.flashing-windows-widget .label {
-  padding: -5px 7px 0 7px;
-  color: #242424;
-  background: #ffdd99;
-  margin-bottom: -1px;
-  border-radius: 3px;
-  margin: 2px;
-}
-
-/* .rename-widget { */
-/* } */
-/**/
-/* .rename-widget .line-edit { */
-/* } */
-
-.system-widget {
-    padding-left:0;
-    padding-right: 0;
-}
-
-/* .system-widget.volume .label{
-    color: #89b4fa;
-} */
-.system-widget.power .label {
-    color: #f38ba8;
-}
-
- 
-.system-widget .label{
-    padding-left:6px;
-    padding-right: 6px;
-}
-
-.system-widget .label:hover  {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* .system-widget .label.app1 {color:#89b4fa;} 
-.system-widget .label.app2 {color:#89faa1;}*/
-
-
+  
 /*Power Buttons*/
-.system-widget .label.power-button {
-    color: #ff94b2;
-} 
-.power-button-widget {
-    background-color: rgb(24, 24, 37);
-    border-radius:12px;
-    border:4px solid rgb(49, 50, 68);
+.power-menu-widget .label {
+    color: rgb(243, 139, 168)
 }
- 
-.shutdown-buttons {
+.power-menu-popup {
+    background-color: rgba(24, 24, 37, 0.9);
+    border-radius:32px;
+    border:4px solid rgb(41, 42, 58);
+}
+.power-menu-popup .button {
     padding:0px;
     width: 240px;
     height: 120px;
-    border-radius: 8px;
-    background-color: rgb(49, 50, 68);
+    border-radius: 16px;
+    background-color: rgb(41, 42, 58);
     font-family: "SegoeUI";
     color: white;
     border: 1px solid rgba(255,255,255,0.1);
     margin: 8px;
-}
- 
-.shutdown-buttons.hover {
+} 
+.power-menu-popup .button.hover {
     background-color: rgb(55, 56, 75);
     border: 1px solid rgb(55, 56, 75);
 
 }
-.shutdown-label {
+.power-menu-popup .button .label {
     margin-bottom: 8px;
     font-size: 18px;
     font-weight:600;
     color: rgba(255, 255, 255, 0.95);  
 }
-.shutdown-icons {
+.power-menu-popup .button .icon {
     font-size: 48px;
     padding-top:8px;
     color: rgba(255, 255, 255, 0.25);  
 }
-.shutdown-buttons.cancel .shutdown-icons {
+.power-menu-popup .button.cancel .icon {
     color:rgba(243, 139, 168, 0.55);
 }
-.shutdown-buttons.cancel .shutdown-label {
+.power-menu-popup .button.cancel .label {
     color:rgba(243, 139, 168, 0.95);
 }
-
-/* .rename-widget { */
-/* } */
-/**/
-/* .rename-widget .line-edit { */
-/* } */
-
-.system-widget {
-    padding-left:0;
-    padding-right: 0;
+.power-menu-popup .button.shutdown .icon {
+    color:rgba(137, 180, 250, 0.55);
 }
-
-/* .system-widget.volume .label{
-    color: #89b4fa;
-} */
-.system-widget.power .label {
-    color: #f38ba8;
-}
-
-.system-widget .label{
-    padding-left:6px;
-    padding-right: 6px;
-}
-
-.system-widget .label:hover  {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* .system-widget .label.app1 {color:#89b4fa;} 
-.system-widget .label.app2 {color:#89faa1;}*/
-
-.media-widget .media-btn {
-    padding: 0 5px;
-    font-weight: bold;
-}
-
-.media-btn {
-    background: transparent;
+.power-menu-popup .button.shutdown .label {
+    color:rgba(137, 180, 250, 0.95);
 }
