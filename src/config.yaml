@@ -266,7 +266,7 @@ widgets:
         cancel: ["\udb81\udf3a","Cancel"]
         #force_shutdown: ["\uf011","Force Shut Down"]
         #force_restart: ["\uead2","Force Restart"]
- 
+
   weather:
     type: "yasb.weather.WeatherWidget"
     options:

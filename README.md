@@ -19,40 +19,23 @@ The config file allows for extensive configuration of one or more taskbars, wher
 For an example of the default bar configuration, see the image below:
 ![](img/yasb_bar.png)
 
-### Some interesting features:
-- Multi-monitor and monitor-exclusive taskbars
-- Multiple bars per monitor
-- Top, bottom and centred bar alignment
-- Full UI customisation via user-defined stylesheet
-- Extensive configuration via a user-defined configuration file
-- Config and stylesheet validation
-- Configurable taskbar widgets
-  - Active Window Title (and other window information)
-  - Battery Widget with customisable 
-  - Clock Widget with multi-time zone support
-  - Custom (command line) Widgets with JSON parsing
-  - Memory & CPU Monitor Widgets
-  - [Komorebi WM](https://github.com/LGUG2Z/komorebi) Workspace Widget
-  - and more...
+## Widgets
 
-### TODO List
-- [ ] Documentation (Wiki is WIP)
-- [x] ~~Automatic bar creation/deletion for screen connect/disconnect events~~
-- [x] ~~New top, left, bottom, right padding setting~~
-- [x] ~~Config/stylesheet auto-loading (via file watcher)~~
-- [x] ~~Window Blur effect~~
-- [ ] SCSS stylesheet support
-- [ ] Tray options for toggling bars on/off
-- [ ] Improve default CSS stylesheet
-- [x] Media Player Widget
-- [x] [Power Button Widget - WIP](https://github.com/ashwinjadhav818/tree/widget/power-button)
-- [x] Disk Space Widget
-- [ ] Keyboard State Widget
-- [ ] Bluetooth(?) Widget
-- [x] Volume Widget
-- [ ] Backlight Widget
-- [ ] Calendar Pop-up for Clock Widget
-
+- **Power Menu**: Access various power options including lock, sleep, shutdown, restart, and hibernate.
+- **Active Window**: Displays the title and icon of the currently active window.
+- **Flashing Windows**: Indicates windows that are flashing to draw attention.
+- **Battery**: Shows the percentage of battery remaining, charging status, and time remaining.
+- **Clock**: Displays the current time, with options for different time zones and date formats.
+- **CPU**: Displays CPU usage with a histogram view available.
+- **Memory**: Shows the current memory usage.
+- **WiFi**: Displays the current WiFi signal strength and network name.
+- **Disk**: Shows disk space usage.
+- **Volume**: Displays the volume percentage.
+- **Media Player**: Shows the currently playing media with its thumbnail and controls.
+- **Traffic**: Displays the download and upload speeds.
+- **Weather**: Shows current weather statistics.
+- **Komorebi Workspaces**: Integrates with [Komorebi](https://github.com/lgug2z/komorebi) to show workspace information.
+- **Komorebi Active Layout**: Displays the current layout in use by Komorebi.
 
 ### How do you run it?
 - Install [Python 3.12](https://www.python.org/doc/versions/)
@@ -77,18 +60,18 @@ All taskbars can also be styled using a configurable stylesheet [styles.css](src
 - `C:/Users/{username}/.config/yasb/styles.css`
 - `/path/to/yasb/src/styles.css`
 
-NOTE: If either configuration file is not present in the user's `$HOME/.yasb` directory (or if they contain errors), the default config and stylesheet will be loaded instead. You may also be prompted with a popup error dialog showing which lines of code contain linting errors.
+NOTE: If either configuration file is not present in the user's `$HOME/.config/yasb` directory (or if they contain errors), the default config and stylesheet will be loaded instead. You may also be prompted with a popup error dialog showing which lines of code contain linting errors.
 
 ## Troubleshooting
 
 #### Why aren't icons being displayed correctly in my taskbar?
-By default, yasb uses the [Font Awesome 5 Free]((https://fontawesome.com/v5.15/how-to-use/on-the-desktop/setup/getting-started)) icon font. If this is not installed on your system, this is likely the reason why icons are not appearing correctly in your taskbar.
+By default, yasb uses the JetBrainsMono [Nerd font](https://nerdfonts.com). If this is not installed on your system, this is likely the reason why icons are not appearing correctly in your taskbar.
 
 If you would like to use a different icon font, simply change the wildcard font-family CSS rule in the stylesheet file to your prefered icon font:
 ```css
 * {
-    font-family: 'Courier New', 'Font Awesome 5 Free';
-    font-size: 16px;
+    font-family: "JetBrainsMono NFP";
+    font-size: 12px;
     ...
 }
 ```
@@ -123,3 +106,7 @@ python -m pylama
 ## Acknowledgments
 This project is the fork of the original repository - [Yasb](https://github.com/da-rth/yasb)
 I would like to express my sincere gratitude towards the original creator/owner of the project [Daniel A](https://github.com/da-rth) 
+
+## Other similar projects
+- [Zebar](https://github.com/glzr-io/zebar) - Status bar made in Tauri by the developer of [GlazeWM](https://github.com/glzr-io/glazewm)
+- [Amn's Yasb](https://github.com/amnweb/yasb) - Also a fork of the original yasb project but is been constantly been worked on.
