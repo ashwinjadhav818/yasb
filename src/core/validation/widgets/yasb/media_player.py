@@ -2,18 +2,10 @@ DEFAULTS = {
     'label': "{media[title]} - {media[artist]}",
     'label_alt': "{media[title]} - {media[artist]}",
     'update_interval': 1000,
-    'keep_thumbnail_aspect_ratio': False,
-    'layout': ["thumbnail", "label", "close"],
-    'icons': {
-        'shuffle': "\uf074",
-        'play': "\uf04b",
-        'pause': "\uf04c",
-        'repeat_off': "\uf2f9",
-        'repeat_track': "\uf2f9 (T)",
-        'repeat_list': "\uf2f9 (L)",
-        'next': "\uf051",
-        'prev': "\uf048",
-        'close': "\uf00d"
+    'callbacks': {
+        'on_left': 'toggle_label',
+        'on_middle': 'do_nothing',
+        'on_right': 'do_nothing'
     }
 }
 
@@ -26,63 +18,93 @@ VALIDATION_SCHEMA = {
         'type': 'string',
         'default': DEFAULTS['label_alt']
     },
+    'hide_empty': {
+        'type': 'boolean',
+        'default': False
+    },
     'update_interval': {
         'type': 'integer',
-        'default': DEFAULTS['update_interval'],
-        'min': 0
+        'default': 1000,
+        'min': 0,
+        'max': 60000
     },
-    'keep_thumbnail_aspect_ratio': {
-        'type': 'boolean',
-        'default': DEFAULTS['keep_thumbnail_aspect_ratio']
-    },
-    'layout': {
-        'type': 'list',
+    'callbacks': {
+        'type': 'dict',
         'schema': {
-            'type': 'string',
-            'allowed': ["thumbnail", "label", "close", "prev", "play_pause", "next", "shuffle", "repeat"]
+            'on_left': {
+                'type': 'string',
+                'default': DEFAULTS['callbacks']['on_left'],
+            },
+            'on_middle': {
+                'type': 'string',
+                'default': DEFAULTS['callbacks']['on_middle'],
+            },
+            'on_right': {
+                'type': 'string',
+                'default': DEFAULTS['callbacks']['on_right'],
+            }
         },
-        'default': DEFAULTS['layout']
+        'default': DEFAULTS['callbacks']
     },
+    'max_field_size': {
+        'type': 'dict',
+        'schema': {
+            'label': {
+                'type': 'integer',
+                'default': 15,
+                'min': 0,
+                'max': 200
+            },
+            'label_alt': {
+                'type': 'integer',
+                'default': 30,
+                'min': 0,
+                'max': 200
+            }
+        }
+    },
+    'show_thumbnail': {
+        'type': 'boolean',
+        'default': True
+    },
+    'controls_only': {
+        'type': 'boolean',
+        'default': False
+    },
+    'controls_left': {
+        'type': 'boolean',
+        'default': True
+    },
+    'thumbnail_alpha': {
+        'type': 'integer',
+        'default': 50,
+        'min': 0,
+        'max': 255
+    },
+    'thumbnail_padding':
+        {'type': 'integer',
+         'default': 8,
+         'min': 0,
+         'max': 200},
     'icons': {
         'type': 'dict',
         'schema': {
-            'shuffle': {
+            'prev_track': {
                 'type': 'string',
-                'default': DEFAULTS['icons']['shuffle']
+                'default': '\uf048',
+            },
+            'next_track': {
+                'type': 'string',
+                'default': '\uf051',
             },
             'play': {
                 'type': 'string',
-                'default': DEFAULTS['icons']['play']
+                'default': '\uf04b',
             },
             'pause': {
                 'type': 'string',
-                'default': DEFAULTS['icons']['pause']
+                'default': '\uf04c',
             },
-            'repeat_off': {
-                'type': 'string',
-                'default': DEFAULTS['icons']['repeat_off']
-            },
-            'repeat_track': {
-                'type': 'string',
-                'default': DEFAULTS['icons']['repeat_track']
-            },
-            'repeat_list': {
-                'type': 'string',
-                'default': DEFAULTS['icons']['repeat_list']
-            },
-            'next': {
-                'type': 'string',
-                'default': DEFAULTS['icons']['next']
-            },
-            'prev': {
-                'type': 'string',
-                'default': DEFAULTS['icons']['prev']
-            },
-            'close': {
-                'type': 'string',
-                'default': DEFAULTS['icons']['close']
-            }
         },
-        'default': DEFAULTS['icons']
     }
 }

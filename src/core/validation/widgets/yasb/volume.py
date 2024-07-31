@@ -1,19 +1,18 @@
 DEFAULTS = {
-    'label': "{volume_icon} {volume_level}%",
-    'label_alt': "{volume_icon} {volume_level}%",
-    'update_interval': 1000,
+    'label': "{volume[percent]}%",
+    'label_alt': "{volume[percent]}%",
     'volume_icons': [
-        "\ueee8",
-        "\ueee8",
-        "\uf026",
-        "\uf027",
-        "\uf028"
+        "\ueee8",  # Icon for muted
+        "\uf026",  # Icon for 0-10% volume
+        "\uf027",  # Icon for 11-30% volume
+        "\uf027",  # Icon for 31-60% volume
+        "\uf028"   # Icon for 61-100% volume
     ],
     'callbacks': {
         'on_left': 'do_nothing',
         'on_middle': 'do_nothing',
         'on_right': 'do_nothing'
-    }
+    },
 }
 
 VALIDATION_SCHEMA = {
@@ -32,12 +31,6 @@ VALIDATION_SCHEMA = {
             'type': 'string',
             'required': False
         }
-    },
-    'update_interval': {
-        'type': 'integer',
-        'default': 1000,
-        'min': 0,
-        'max': 60000
     },
     'callbacks': {
         'type': 'dict',

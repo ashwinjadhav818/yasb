@@ -27,11 +27,6 @@ class KomorebiClient:
             output = subprocess.check_output([self._komorebic_path, "state"], timeout=self._timeout_secs, shell=True)
             return json.loads(output)
 
-    def configuration(self) -> Optional[str]:
-        with suppress(json.JSONDecodeError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
-            return subprocess.check_output([self._komorebic_path, "configuration"], timeout=self._timeout_secs, shell=True).decode("utf-8")[:-1]
-        return None
-
     def get_screens(self, state: dict) -> list:
         return state['monitors']['elements']
 
@@ -87,32 +82,11 @@ class KomorebiClient:
                     if managed_window['hwnd'] == window_hwnd:
                         return add_index(workspace, i)
 
-    def get_mouse_follows_focus(self, state: dict) -> bool:
-        return state['mouse_follows_focus']
-
     def activate_workspace(self, ws_idx: int, wait: bool = False) -> None:
         p = subprocess.Popen([self._komorebic_path, "focus-workspace", str(ws_idx)], shell=True)
 
         if wait:
             p.wait()
-
-    def hide_preview(self, ws_idx: int, stay_on_workspace: bool = False) -> None:
-        if self._previous_mouse_follows_focus:
-            self._previous_mouse_follows_focus = False
-            self.toggle("mouse-follows-focus", True)
-
-        if not stay_on_workspace:
-            self.activate_workspace(ws_idx, True)
-
-    def preview_workspace(self, ws_idx: int, state: dict) -> None:
-        is_mff_active = self.get_mouse_follows_focus(state)
-
-        if is_mff_active and not self._previous_mouse_follows_focus:
-            self._previous_mouse_follows_focus = True
-            self.toggle("mouse-follows-focus", True)
-
-        self.activate_workspace(ws_idx, True)
-
     def next_workspace(self) -> None:
         try:
             subprocess.Popen([self._komorebic_path, "cycle-workspace", "next"], shell=True)
@@ -124,12 +98,6 @@ class KomorebiClient:
             subprocess.Popen([self._komorebic_path, "cycle-workspace", "prev"], shell=True)
         except subprocess.SubprocessError:
             logging.exception("Failed to cycle komorebi workspace")
-
-    def workspace_name(self, monitor, workspace, name) -> None:
-        try:
-            subprocess.Popen([self._komorebic_path, "workspace-name", str(monitor), str(workspace), name], shell=True)
-        except subprocess.SubprocessError:
-            logging.exception("Failed to set workspace name")
 
     def toggle_focus_mouse(self) -> None:
         try:
