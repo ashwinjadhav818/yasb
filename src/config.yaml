@@ -53,6 +53,7 @@ bars:
           "volume",
           "wifi",
           "battery",
+          "wallapers",
           "clock",
           "notification_button"
         ]
@@ -291,6 +292,14 @@ widgets:
         default: "\uebaa"
         # https://www.weatherapi.com/docs/
         # Usage {temp_c}, {min_temp_c}, {max_temp_c}, {temp_f}, {min_temp_f}, {max_temp_f}, {location}, {humidity}, {icon}, {conditions}
+
+  wallapers:
+    type: "yasb.wallpapers.WallpapersWidget"
+    options:
+      label: "<span>\uef1f</span>"
+      image_path: "C:\\Users\\xxx\\Images" # Path to folder with images
+      change_automatically: false # Automatically change wallpaper
+      update_interval: 60 # If change_automatically is true, update interval in seconds
 
   # Some custom widgets
 
