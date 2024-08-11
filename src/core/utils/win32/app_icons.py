@@ -4,7 +4,7 @@ import re
 import logging
 import win32ui
 import win32con
-from core.utils.win32.uwp import get_package
+from core.utils.win32.app_uwp import get_package
 import xml.etree.ElementTree as ET
 from pathlib import Path
 import win32gui
