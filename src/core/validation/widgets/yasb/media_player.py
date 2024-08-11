@@ -1,6 +1,6 @@
 DEFAULTS = {
-    'label': "{media[title]} - {media[artist]}",
-    'label_alt': "{media[title]} - {media[artist]}",
+    'label': "{title} - {artist}",
+    'label_alt': "{title}",
     'update_interval': 1000,
     'callbacks': {
         'on_left': 'toggle_label',
@@ -81,11 +81,18 @@ VALIDATION_SCHEMA = {
         'min': 0,
         'max': 255
     },
-    'thumbnail_padding':
-        {'type': 'integer',
-         'default': 8,
-         'min': 0,
-         'max': 200},
+    'thumbnail_padding': {
+        'type': 'integer',
+        'default': 8,
+        'min': 0,
+        'max': 200
+    },
+    'thumbnail_corner_radius': {
+        'type': 'integer',
+        'default': 0,
+        'min': 0,
+        'max': 100
+    },
     'icons': {
         'type': 'dict',
         'schema': {

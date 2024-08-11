@@ -130,10 +130,10 @@
 /* ICONS */
 .icon {
 	font-size: 16px;
+    font-family: "Segoe Fluent Icons";
 }
 .volume-widget .icon {
 	color: #89b4fa;
-	margin: 1px 5px 0 0;
 }
 .cpu-widget .icon,
 .memory-widget .icon {
@@ -149,10 +149,14 @@
 	padding: 0 6px;
 	margin: 0;
 }
+.media-widget .btn {
+    font-family: "Segoe Fluent Icons";
+}
 
 /* WEATHER WIDGET */
 .weather-widget .icon {
 	font-size: 16px;
+    font-family: "JetBrainsMono NFP";
 	margin: 0 2px 1px 0;
 }
 .weather-widget .icon.sunnyDay {
@@ -176,17 +180,14 @@
 
 
 /* NEW MEDIA WIDGET */
-.media-widget {
-	padding: 0;
-	margin: 0;
-}
 .media-widget .label {
 	color: #bac2db;
+    padding: 0;
 }
 .media-widget .btn {
 	color: #acb2c9;
 	padding: 0 5px;
-	margin: 4px 2px;
+	/* margin: 4px 2px; */
 }
 .media-widget .btn:hover {
 	color: #babfd3;

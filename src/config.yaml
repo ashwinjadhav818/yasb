@@ -221,19 +221,21 @@ widgets:
         on_right: "exec cmd.exe /c start ms-settings:sound"
 
   media_player:
-      type: "yasb.media_player.MediaWidget"
-      options:
+    type: "yasb.media_player.MediaWidget"
+    options:
         label: "{title} - {artist}"
         label_alt: "{title}"
         update_interval: 1000
         max_field_size:
-          label: 15
+          label: 20
           label_alt: 30
         show_thumbnail: true
         controls_only: false
         controls_left: true
-        thumbnail_alpha: 255
-        thumbnail_padding: 4
+        hide_empty: false
+        thumbnail_alpha: 80
+        thumbnail_padding: 8
+        thumbnail_corner_radius: 16 # Set to 0 for square corners
         icons:
           prev_track: "\uf048"
           next_track: "\uf051"
